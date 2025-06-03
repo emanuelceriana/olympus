@@ -1,0 +1,151 @@
+.overlay {
+  height: 100dvh;
+  height: 100vh;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.cards-list {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay .card-border {
+  height: 40%;
+  border: 2px solid white;
+  border-radius: 5px;
+  background: transparent;
+  position: relative;
+  aspect-ratio: 2/3;
+}
+
+.overlay .card {
+  height: 40%;
+  border: 2px solid white;
+  border-radius: 5px;
+  background: gray;
+  position: relative;
+}
+
+.overlay .card .remove-btn {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  color: white;
+  font-weight: bold;
+  background: #bc0101cc;
+  border: 1px solid black;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 2em;
+}
+
+.overlay .card .remove-btn:hover {
+  border: 2px inset black;
+}
+
+.waiting-message {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  font-size: 1.5rem;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: 25% 15% 25% 15% 25%;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  gap: 0;
+  overflow: hidden;
+}
+
+.profile-card {
+  width: 60px;
+  height: 100px;
+  border: 2px solid #000;
+  background: white;
+}
+
+.gods {
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  grid-column: 2;
+  grid-row: 3;
+  padding: 0 2rem;
+  gap: 1rem;
+}
+
+.god {
+  flex: 1;
+  aspect-ratio: 3/4;
+  color: black;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-radius: 8px;
+
+  border: 2px solid black;
+}
+
+.god .content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-direction: space-between;
+  justify-content: space-between;
+}
+
+.god .content span {
+  padding: 0 0.5rem;
+}
+
+.god .content span:nth-child(2) {
+  text-align: end;
+}
+
+.god:nth-child(1) {
+  background-color: pink;
+}
+.god:nth-child(2) {
+  background-color: yellow;
+}
+.god:nth-child(3) {
+  background-color: lightblue;
+}
+.god:nth-child(4) {
+  background-color: blue;
+  color: white;
+}
+.god:nth-child(5) {
+  background-color: red;
+  color: white;
+}
+.god:nth-child(6) {
+  background-color: green;
+  color: white;
+}
+.god:nth-child(7) {
+  background-color: purple;
+  color: white;
+}

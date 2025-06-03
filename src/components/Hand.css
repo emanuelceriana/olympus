@@ -1,0 +1,112 @@
+.hand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.opponent-hand {
+  height: 100%;
+  width: 100%;
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  overflow: visible; /* permite sobresalir hacia arriba */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* opcional, evita que cartas fuera del área corten clics */
+  transform: rotate(180deg) translate(2%, 10%); /* Agregar esta línea */
+}
+
+.player-hand {
+  height: 100%;
+  width: 100%;
+  grid-column: 2;
+  grid-row: 5;
+  position: relative;
+
+  overflow: visible; /* permite sobresalir hacia arriba */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* opcional, evita que cartas fuera del área corten clics */
+}
+
+.card.fanned {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+  transition: transform 0.3s ease;
+  pointer-events: auto;
+}
+
+.card {
+  height: 110%;
+  aspect-ratio: 2/3;
+  border: 2px solid black;
+  border-radius: 5px;
+  background: gray;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.card.back {
+  background: #222;
+  border-color: #ccc;
+}
+
+.card.front {
+  background: #ccc;
+}
+
+.card.front:hover {
+  box-shadow: 0 0 15px 4px #fffffccb;
+}
+
+.card.pink {
+  background: pink !important;
+  color: black;
+}
+
+.card.yellow {
+  background: yellow !important;
+  color: black;
+}
+
+.card.lightblue {
+  background: lightblue !important;
+  color: black;
+}
+
+.card.blue {
+  background: blue !important;
+}
+
+.card.red {
+  background: red !important;
+}
+
+.card.green {
+  background: green !important;
+}
+
+.card.purple {
+  background: purple !important;
+}
+
+.card .number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.2rem 0.5rem;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .card {
+    height: 70%;
+  }
+}

@@ -1,0 +1,16 @@
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 3rem 1rem;
+  background-color: #f0f0f0;
+  grid-column: 1;
+  grid-row: 1 / span 5;
+}
+
+.action-icons {
+  display: flex;
+  gap: 5px;
+  font-size: 0.2rem;
+}
