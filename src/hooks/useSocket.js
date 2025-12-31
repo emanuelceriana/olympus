@@ -1,15 +1,23 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, act } from "react";
 import socket from "../socket";
 
 export default function useSocket() {
   const [hand, setHand] = useState([...Array(6)]);
   const [opponentHand, setOpponentHand] = useState([...Array(6)]);
   const [role, setRole] = useState(null);
+  const [deck, setDeck] = useState(null);
   const [allCards, setAllCards] = useState([]);
   const [discarded, setDiscarded] = useState(null);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [opponentHoverIndex, setOpponentHoverIndex] = useState(null);
+  const [actionResolver, setActionResolver] = useState({});
+  const [overlayOption, setOverlayOption] = useState(0);
+  const [availableActions, setAvailableActions] = useState([]);
+  const [opponentAvailableActions, setOpponentAvailableActions] = useState([]);
+  const [scoredCards, setScoredCards] = useState([]);
+  const [opponentScoredCards, setOpponentScoredCards] = useState([]);
+  const [secretCard, setSecretCard] = useState(null);
 
   useEffect(() => {
     if (!socket.connected) {
@@ -18,18 +26,32 @@ export default function useSocket() {
 
     socket.on(
       "game-start",
-      ({ role, hand, opponentHand, discarded, config: { allCards } }) => {
+      ({
+        availableActions,
+        opponentAvailableActions,
+        role,
+        hand,
+        opponentHand,
+        discarded,
+        deck,
+        secretCard,
+        config: { allCards },
+      }) => {
+        setAvailableActions(availableActions);
+        setOpponentAvailableActions(opponentAvailableActions);
         setRole(role);
         setHand(hand);
+        setDeck(deck);
         setOpponentHand(opponentHand);
         setAllCards(allCards);
         setDiscarded(discarded);
         setIsGameStarted(true);
+        setSecretCard(secretCard);
       }
     );
 
     socket.on("disconnect", () => {
-      console.log("Socket desconectado");
+      console.log("Socket disconnected");
     });
 
     return () => {
@@ -38,9 +60,10 @@ export default function useSocket() {
   }, []);
 
   useEffect(() => {
-    socket.on("drawn-card", ({ cardId }) => {
+    socket.on("drawn-card", ({ cardId, deck }) => {
       console.log("drawn-card", cardId);
       setHand((prev) => [...prev, cardId]);
+      setDeck(deck);
     });
 
     return () => {
@@ -54,13 +77,14 @@ export default function useSocket() {
     });
 
     return () => {
-      socket.off("draw-card");
+      socket.off("turn-start");
     };
   }, []);
 
   useEffect(() => {
-    socket.on("oponent-hand-updated", ({ hand }) => {
+    socket.on("oponent-hand-updated", ({ hand, deck }) => {
       setOpponentHand([...hand]);
+      setDeck(deck);
     });
 
     return () => {
@@ -78,17 +102,89 @@ export default function useSocket() {
     };
   }, []);
 
+  useEffect(() => {
+    socket.on(
+      "update-opponent-available-actions",
+      ({ opponentAvailableActions }) => {
+        setOpponentAvailableActions(opponentAvailableActions);
+      }
+    );
+
+    return () => {
+      socket.off("resolve-gift-action");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("resolve-gift-action", ({ pickedCards }) => {
+      setActionResolver({ pickedCards, action: 3 });
+    });
+
+    return () => {
+      socket.off("resolve-gift-action");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on(
+      "gift-action-clean-up",
+      ({
+        availableActions,
+        opponentAvailableActions,
+        hand,
+        opponentHand,
+        scoredCards,
+        opponentScoredCards,
+      }) => {
+        setOverlayOption(null);
+        setActionResolver({});
+        setScoredCards(scoredCards);
+        setOpponentScoredCards(opponentScoredCards);
+        setAvailableActions(availableActions);
+        setOpponentAvailableActions(opponentAvailableActions);
+        setHand(hand);
+        setOpponentHand(opponentHand);
+        console.log(scoredCards, opponentScoredCards);
+      }
+    );
+
+    return () => {
+      socket.off("gift-action-clean-up");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on(
+      "secret-action-clean-up",
+      ({ availableActions, hand, secretCard }) => {
+        setOverlayOption(null);
+        setAvailableActions(availableActions);
+        setHand(hand);
+        setSecretCard(secretCard);
+      }
+    );
+
+    return () => {
+      socket.off("gift-action-clean-up");
+    };
+  }, []);
+
   const handCards = useMemo(
     () => allCards.filter((card) => hand.find((cardId) => card.id === cardId)),
     [allCards, hand]
   );
 
-  console.log("myTurn", isMyTurn);
-  console.log("handCards", handCards);
+  console.log("scoredCards", scoredCards);
+  console.log("opponentHand", opponentHand);
+  console.log("secretCard", secretCard);
 
   return {
     socket,
+    availableActions,
+    opponentAvailableActions,
     hand,
+    deck,
+    discarded,
     handCards,
     opponentHand,
     opponentHoverIndex,
@@ -96,5 +192,11 @@ export default function useSocket() {
     role,
     discarded,
     isMyTurn,
+    actionResolver,
+    overlayOption,
+    scoredCards,
+    opponentScoredCards,
+    secretCard,
+    setOverlayOption,
   };
 }

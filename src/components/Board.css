@@ -1,3 +1,7 @@
+:root {
+  --border-color: black;
+}
+
 .overlay {
   height: 100dvh;
   height: 100vh;
@@ -17,11 +21,11 @@
   justify-content: center;
   gap: 1rem;
   width: 100%;
-  height: 100%;
+  height: 30%;
 }
 
 .overlay .card-border {
-  height: 40%;
+  height: 100%;
   border: 2px solid white;
   border-radius: 5px;
   background: transparent;
@@ -30,7 +34,7 @@
 }
 
 .overlay .card {
-  height: 40%;
+  height: 100%;
   border: 2px solid white;
   border-radius: 5px;
   background: gray;
@@ -45,6 +49,25 @@
   color: white;
   font-weight: bold;
   background: #bc0101cc;
+  border: 1px solid black;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 2em;
+}
+
+.overlay .card .selected-btn {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  color: white;
+  font-weight: bold;
+  background: rgb(16, 182, 16);
   border: 1px solid black;
   cursor: pointer;
   border-radius: 50%;
@@ -78,11 +101,26 @@
   overflow: hidden;
 }
 
-.profile-card {
-  width: 60px;
-  height: 100px;
-  border: 2px solid #000;
-  background: white;
+.opponent-scored-cards {
+  grid-column: 2;
+  grid-row: 2;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 1rem;
+}
+
+.player-scored-cards {
+  grid-column: 2;
+  grid-row: 4;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 1rem;
 }
 
 .gods {
@@ -103,8 +141,22 @@
   font-weight: bold;
   font-size: 1.2rem;
   border-radius: 8px;
-
   border: 2px solid black;
+  margin: 0.5rem;
+}
+
+.opponent-scored-cards .god,
+.player-scored-cards .god {
+  height: 60%;
+  aspect-ratio: 3 / 4;
+  flex: 0;
+  font-size: 0.8em;
+  margin: 0;
+}
+
+.opponent-scored-cards .god.hidden,
+.player-scored-cards .god.hidden {
+  opacity: 0;
 }
 
 .god .content {
@@ -125,27 +177,55 @@
 }
 
 .god:nth-child(1) {
-  background-color: pink;
+  --card-color: pink;
 }
 .god:nth-child(2) {
-  background-color: yellow;
+  --card-color: yellow;
 }
 .god:nth-child(3) {
-  background-color: lightblue;
+  --card-color: lightblue;
 }
 .god:nth-child(4) {
-  background-color: blue;
+  --card-color: blue;
   color: white;
 }
 .god:nth-child(5) {
-  background-color: red;
+  --card-color: red;
   color: white;
 }
 .god:nth-child(6) {
-  background-color: green;
+  --card-color: green;
   color: white;
 }
 .god:nth-child(7) {
-  background-color: purple;
+  --card-color: purple;
   color: white;
+}
+
+/* Aplica el background usando la variable */
+.god {
+  background-color: var(--card-color);
+}
+
+/* Define los shadows UNA SOLA VEZ usando la variable */
+.god[data-count="2"] {
+  box-shadow: 2px -2px 0 0 var(--card-color), 2px -2px 0 1px var(--border-color);
+}
+
+.god[data-count="3"] {
+  box-shadow: 2px -2px 0 0 var(--card-color), 2px -2px 0 1px var(--border-color),
+    4px -4px 0 0 var(--card-color), 4px -4px 0 1px var(--border-color);
+}
+
+.god[data-count="4"] {
+  box-shadow: 2px -2px 0 0 var(--card-color), 2px -2px 0 1px var(--border-color),
+    4px -4px 0 0 var(--card-color), 4px -4px 0 1px var(--border-color),
+    6px -6px 0 0 var(--card-color), 6px -6px 0 1px var(--border-color);
+}
+
+.god[data-count="5"] {
+  box-shadow: 2px -2px 0 0 var(--card-color), 2px -2px 0 1px var(--border-color),
+    4px -4px 0 0 var(--card-color), 4px -4px 0 1px var(--border-color),
+    6px -6px 0 0 var(--card-color), 6px -6px 0 1px var(--border-color),
+    8px -8px 0 0 var(--card-color), 8px -8px 0 1px var(--border-color);
 }

@@ -32,15 +32,12 @@ export const Hand = ({
     (cardId) => {
       if (isOpponent) return; // Prevent picking cards from opponent's hand
 
-      console.log(pickedCards, overlayOption);
       if (pickedCards.length < overlayOption) {
         setPickedCards((prev) => [...prev, cardId]);
       }
     },
     [pickedCards, overlayOption]
   );
-
-  console.log("cards", cards);
 
   return isGameStarted || (!isGameStarted && !isOpponent) ? (
     <div className={`hand ${isOpponent ? "opponent-hand" : "player-hand"}`}>
