@@ -169,6 +169,98 @@ export default function useSocket() {
     };
   }, []);
 
+  const [favors, setFavors] = useState({});
+  const [winner, setWinner] = useState(null);
+
+  useEffect(() => {
+      socket.on("round-end", ({ favors, scoredCards }) => {
+          setFavors(favors);
+          setScoredCards(scoredCards); // Update to show revealed secrets
+      });
+
+       socket.on("new-round", ({
+           hand,
+           opponentHand,
+           discarded,
+           deck,
+           availableActions,
+           opponentAvailableActions,
+           favors
+       })=> {
+           setHand(hand);
+           setOpponentHand(opponentHand);
+           setDiscarded(discarded);
+           setDeck(deck);
+           setAvailableActions(availableActions);
+           setOpponentAvailableActions(opponentAvailableActions);
+           setFavors(favors);
+           setScoredCards([]);
+           setOpponentScoredCards([]);
+           setSecretCard(null);
+           // Alert new round?
+       });
+
+       socket.on("game-over", ({ winner }) => {
+           setWinner(winner);
+           alert(winner + " Wins!"); // Simple alert for now
+       });
+
+       return () => {
+           socket.off("round-end");
+           socket.off("new-round");
+           socket.off("game-over");
+       }
+  }, []);
+
+  useEffect(() => {
+    socket.on("discard-action-clean-up", ({ availableActions, hand, discarded }) => {
+      setOverlayOption(null);
+      setAvailableActions(availableActions);
+      setHand(hand);
+      setDiscarded(discarded);
+    });
+
+    return () => {
+      // socket.off("discard-action-clean-up");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("update-discarded", ({ discarded }) => {
+      setDiscarded(discarded);
+    });
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    socket.on("resolve-competition-action", ({ pickedCards }) => {
+      // pickedCards is [[c1, c2], [c3, c4]]
+      setActionResolver({ pickedCards, action: 4 });
+    });
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    socket.on("competition-action-clean-up", ({
+        availableActions,
+        opponentAvailableActions,
+        hand,
+        opponentHand,
+        scoredCards,
+        opponentScoredCards,
+      }) => {
+        setOverlayOption(null);
+        setActionResolver({});
+        setScoredCards(scoredCards);
+        setOpponentScoredCards(opponentScoredCards);
+        setAvailableActions(availableActions);
+        setOpponentAvailableActions(opponentAvailableActions);
+        setHand(hand);
+        setOpponentHand(opponentHand);
+      });
+      return () => {};
+  }, []);
+
   const handCards = useMemo(
     () => allCards.filter((card) => hand.find((cardId) => card.id === cardId)),
     [allCards, hand]
@@ -198,5 +290,7 @@ export default function useSocket() {
     opponentScoredCards,
     secretCard,
     setOverlayOption,
+    favors,
+    winner
   };
 }

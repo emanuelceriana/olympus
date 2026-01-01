@@ -10,34 +10,48 @@ export const SecretAction = ({
     socket.emit("trigger-secret-action", {
       pickedCard: pickedCards[0],
     });
-  }, [pickedCards]);
+  }, [pickedCards, socket]);
+
+  const requiredCards = 1;
+  const progress = pickedCards.length;
 
   return (
-    <>
-      <h2>Secret</h2>
-      <p>Select a card to reserve.</p>
+    <div className="action-container">
+      <h2>🔮 Secreto Divino</h2>
+      <p className="action-description">
+        Elige <strong>1 carta</strong> de tu mano para guardar en secreto. 
+        Esta carta se revelará al final de la ronda para determinar el favor de los dioses.
+      </p>
+      
+      <div className="step-indicator">
+        <span className={progress >= 1 ? 'completed' : ''}>Paso 1: Selecciona una carta de tu mano</span>
+      </div>
+
       <div className="cards-list">
         {pickedCards.length > 0 &&
           pickedCards.map((card) => (
-            <div className={`card ${card.color}`}>
+            <div className={`card ${card.color}`} key={card.id}>
               <div className="number">{card.value}</div>
               <div
                 className="remove-btn"
                 onClick={() => handleRemoveCard(card)}
               >
-                X
+                ✕
               </div>
             </div>
           ))}
-        {Array(overlayOption - pickedCards.length)
+        {Array(requiredCards - pickedCards.length)
           .fill(null)
-          .map((_) => (
-            <div className="card-border"></div>
+          .map((_, i) => (
+            <div className="card-border" key={i}></div>
           ))}
       </div>
-      {pickedCards.length === 1 && (
-        <button onClick={triggerSecretAction}>Accept</button>
+
+      {pickedCards.length === requiredCards && (
+        <button onClick={triggerSecretAction} className="action-confirm-btn">
+          ⚡ Consagrar Secreto
+        </button>
       )}
-    </>
+    </div>
   );
 };

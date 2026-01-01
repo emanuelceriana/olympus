@@ -1,40 +1,40 @@
-import { useState } from "react";
+import { useCallback } from "react";
 
 export const GiftActionResolver = ({ socket, pickedCards }) => {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const selectCard = (card) => {
-    setSelectedCard(card);
-  };
-
-  const handleEndGiftAction = () => {
-    if (selectedCard) {
+  const handlePickCard = useCallback(
+    (card) => {
       socket.emit("end-gift-action", {
         cardsToPick: pickedCards,
-        pickedCard: selectedCard,
+        pickedCard: card,
       });
-    }
-  };
+    },
+    [socket, pickedCards]
+  );
 
   return (
-    <>
-      <h2>Gift</h2>
-      <p>Pick one card from the three selected by your opponent.</p>
-      <div className="cards-list">
-        {pickedCards.length > 0 &&
-          pickedCards.map((card) => (
-            <div
-              className={`card ${card.color}`}
-              onClick={() => selectCard(card)}
-              key={card.id}
-            >
-              <div className="number">{card.value}</div>
-              {selectedCard?.id === card.id && (
-                <div className="selected-btn">✔</div>
-              )}
+    <div className="action-container resolver">
+      <h2>🎁 Regalo Recibido</h2>
+      <p className="action-description">
+        Tu oponente te ofrece estas <strong>3 cartas</strong>.
+        Elige <strong>1</strong> para quedártela. Las otras 2 serán para tu oponente.
+      </p>
+      
+      <p className="instruction-highlight">👆 Haz clic en la carta que deseas quedarte</p>
+
+      <div className="cards-list resolver-cards">
+        {pickedCards.map((card) => (
+          <div
+            className={`card ${card.color} selectable`}
+            key={card.id}
+            onClick={() => handlePickCard(card)}
+          >
+            <div className="number">{card.value}</div>
+            <div className="select-overlay">
+              <span>ELEGIR</span>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
-      {selectedCard && <button onClick={handleEndGiftAction}>Accept</button>}
-    </>
+    </div>
   );
 };

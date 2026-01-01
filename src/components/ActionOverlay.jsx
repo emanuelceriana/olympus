@@ -3,6 +3,9 @@ import { SecretAction } from "./SecretAction";
 import { DiscardAction } from "./DiscardAction";
 import { GiftAction } from "./GiftAction";
 import { GiftActionResolver } from "./GiftActionResolver";
+import { CompetitionAction } from "./CompetitionAction";
+import { CompetitionActionResolver } from "./CompetitionActionResolver";
+import "./ActionOverlay.css";
 
 export const ActionOverlay = ({
   socket,
@@ -10,6 +13,7 @@ export const ActionOverlay = ({
   pickedCards,
   setPickedCards,
   actionResolver,
+  onClose,
 }) => {
   useEffect(() => {
     return () => {
@@ -23,11 +27,18 @@ export const ActionOverlay = ({
 
   const renderActionOption = useCallback(
     (overlayOption, actionResolver) => {
-      if (actionResolver) {
+      if (actionResolver && actionResolver.action) {
         switch (actionResolver.action) {
           case 3:
             return (
               <GiftActionResolver
+                socket={socket}
+                pickedCards={actionResolver.pickedCards}
+              />
+            );
+          case 4:
+            return (
+              <CompetitionActionResolver
                 socket={socket}
                 pickedCards={actionResolver.pickedCards}
               />
@@ -48,6 +59,7 @@ export const ActionOverlay = ({
         case 2:
           return (
             <DiscardAction
+              socket={socket}
               overlayOption={overlayOption}
               pickedCards={pickedCards}
               handleRemoveCard={handleRemoveCard}
@@ -63,7 +75,14 @@ export const ActionOverlay = ({
             />
           );
         case 4:
-          return "End Turn";
+          return (
+            <CompetitionAction
+              socket={socket}
+              overlayOption={overlayOption}
+              pickedCards={pickedCards}
+              handleRemoveCard={handleRemoveCard}
+            />
+          );
         default:
           return "";
       }
@@ -71,8 +90,16 @@ export const ActionOverlay = ({
     [pickedCards, handleRemoveCard]
   );
 
+  // Don't show close button when resolving opponent's action (must complete it)
+  const isResolving = actionResolver && actionResolver.action;
+
   return (
     <div className="overlay">
+      {!isResolving && onClose && (
+        <button className="overlay-close-btn" onClick={onClose} title="Cancelar acción">
+          ✕
+        </button>
+      )}
       {renderActionOption(overlayOption, actionResolver)}
     </div>
   );

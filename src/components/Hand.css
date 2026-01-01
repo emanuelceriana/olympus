@@ -1,3 +1,4 @@
+/* ==================== HAND POSITIONS ==================== */
 .hand {
   display: flex;
   justify-content: center;
@@ -12,26 +13,44 @@
   grid-column: 2;
   grid-row: 1;
   position: relative;
-  overflow: visible; /* permite sobresalir hacia arriba */
+  overflow: visible;
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* opcional, evita que cartas fuera del área corten clics */
-  transform: rotate(180deg) translate(2%, 18%); /* Agregar esta línea */
+  pointer-events: none;
+  transform: rotate(180deg) translateY(10%);
 }
 
 .player-hand {
   height: 100%;
   width: 100%;
   grid-column: 2;
-  grid-row: 5;
+  grid-row: 3;
+  /* Updated row */
   position: relative;
-
-  overflow: visible; /* permite sobresalir hacia arriba */
+  transform: translateY(20%);
+  /* Move hand down to clear markers */
+  overflow: visible;
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* opcional, evita que cartas fuera del área corten clics */
+  pointer-events: none;
+  z-index: 1100;
+  /* Above overlay */
+}
+
+/* ==================== CARDS ==================== */
+.card {
+  height: 90%;
+  /* Larger cards to fill the 22% row */
+  aspect-ratio: 5/7;
+  border: 2px solid var(--color-gold, #E8B923);
+  border-radius: 8px;
+  position: relative;
+  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background-size: cover !important;
+  background-position: center !important;
 }
 
 .card.fanned {
@@ -39,16 +58,8 @@
   bottom: 0;
   left: 50%;
   transform-origin: bottom center;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   pointer-events: auto;
-}
-
-.card {
-  height: 90%;
-  aspect-ratio: 2/3;
-  border: 2px solid black;
-  border-radius: 5px;
-  background: gray;
 }
 
 .card:hover {
@@ -56,57 +67,121 @@
 }
 
 .card.back {
-  background: #222;
-  border-color: #ccc;
+  background: linear-gradient(135deg, #1A2540, #0A0F1C);
+  border-color: var(--color-gold-dark, #C9A221);
+}
+
+.card.back::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E8B923'%3E%3Cpath d='M13 3L4 14h7v7l9-11h-7V3z'/%3E%3C/svg%3E") center/contain no-repeat;
+  opacity: 0.3;
 }
 
 .card.front {
-  background: #ccc;
+  background: linear-gradient(145deg, #2A3550, #1A2540);
 }
 
 .card.front:hover {
-  box-shadow: 0 0 15px 4px #fffffccb;
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(232, 185, 35, 0.3);
+  z-index: 10;
 }
 
+/* Card Colors */
+/* Card Colors (Dark Theme + Borders) */
 .card.pink {
-  background: pink !important;
-  color: black;
+  background: #0F1219 !important;
+  border-color: #FF1493;
+  box-shadow: inset 0 0 20px rgba(255, 20, 147, 0.15);
 }
 
 .card.yellow {
-  background: yellow !important;
-  color: black;
+  background: #0F1219 !important;
+  border-color: #DAA520;
+  box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.15);
 }
 
 .card.lightblue {
-  background: lightblue !important;
-  color: black;
+  background: #0F1219 !important;
+  border-color: #4169E1;
+  box-shadow: inset 0 0 20px rgba(65, 105, 225, 0.15);
 }
 
 .card.blue {
-  background: blue !important;
+  background: #0F1219 !important;
+  border-color: #3B82F6;
+  box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.15);
 }
 
 .card.red {
-  background: red !important;
+  background: #0F1219 !important;
+  border-color: #F87171;
+  box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.15);
 }
 
 .card.green {
-  background: green !important;
+  background: #0F1219 !important;
+  border-color: #4ADE80;
+  box-shadow: inset 0 0 20px rgba(74, 222, 128, 0.15);
 }
 
 .card.purple {
-  background: purple !important;
+  background: #0F1219 !important;
+  border-color: #A78BFA;
+  box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.15);
+}
+
+.card.gold {
+  background: #0F1219 !important;
+  border-color: #FBBF24;
+  box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+/* Item Image Styling */
+.item-image {
+  position: absolute;
+  top: 55%;
+  /* Slight offset to visual center below number */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
 }
 
 .card .number {
-  font-size: 1.2rem;
-  font-weight: bold;
-  padding: 0.2rem 0.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0.4rem 0.6rem;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-height: 500px) and (orientation: landscape) {
+/* ==================== MOBILE ==================== */
+@media (max-height: 600px) {
   .card {
-    height: 70%;
+    height: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    height: 85%;
+  }
+
+  .card .number {
+    font-size: 1.2rem;
+  }
+
+  .opponent-hand {
+    transform: rotate(180deg) translateY(5%);
   }
 }

@@ -6,6 +6,56 @@ import "./Board.css";
 import { ActionOverlay } from "./ActionOverlay";
 import cn from "classnames";
 
+// God Images (Full Art)
+import aphroditeImg from "../assets/gods/aphrodite.jpg";
+import zeusImg from "../assets/gods/zeus.jpg";
+import artemisImg from "../assets/gods/artemis.jpg";
+import athenaImg from "../assets/gods/athena.jpg";
+import aresImg from "../assets/gods/ares.jpg";
+import dionysusImg from "../assets/gods/dionysus.jpg";
+import hadesImg from "../assets/gods/hades.jpg";
+
+// Item Images (Objects for Cards)
+import aphroditeItem from "../assets/god-objects/aphrodite.png";
+import zeusItem from "../assets/god-objects/zeus.png";
+import artemisItem from "../assets/god-objects/artemis.png";
+import athenaItem from "../assets/god-objects/athena.png";
+import aresItem from "../assets/god-objects/ares.png";
+import dionysusItem from "../assets/god-objects/dionysus.png";
+import hadesItem from "../assets/god-objects/hades.png";
+
+const godImages = {
+  pink: aphroditeImg,
+  lightblue: artemisImg,
+  green: dionysusImg,
+  red: aresImg,
+  gold: athenaImg,
+  purple: hadesImg,
+  yellow: zeusImg,
+};
+
+const itemImages = {
+  pink: aphroditeItem,
+  lightblue: artemisItem,
+  green: dionysusItem,
+  red: aresItem,
+  gold: athenaItem,
+  purple: hadesItem,
+  yellow: zeusItem,
+};
+
+// God data configuration - ordered by importance (value)
+// Lower value = less important, Higher value = more important
+const GODS_CONFIG = [
+  { val: 2, col: 'pink', name: 'Afrodita' },      // Love - least combat
+  { val: 2, col: 'lightblue', name: 'Artemisa' }, // Hunt
+  { val: 2, col: 'green', name: 'Dionisio' },     // Wine
+  { val: 3, col: 'red', name: 'Ares' },           // War
+  { val: 3, col: 'gold', name: 'Atenea' },        // Wisdom
+  { val: 4, col: 'purple', name: 'Hades' },       // Underworld
+  { val: 5, col: 'yellow', name: 'Zeus' },        // King of Gods - most important
+];
+
 export default function Board() {
   const {
     socket,
@@ -25,6 +75,8 @@ export default function Board() {
     opponentScoredCards,
     secretCard,
     setOverlayOption,
+    favors,
+    winner,
   } = useSocket();
 
   const [pickedCards, setPickedCards] = useState([]);
@@ -38,6 +90,10 @@ export default function Board() {
           pickedCards={pickedCards}
           setPickedCards={setPickedCards}
           actionResolver={actionResolver}
+          onClose={() => {
+            setOverlayOption(null);
+            setPickedCards([]);
+          }}
         />
       )}
       <Actions
@@ -56,79 +112,63 @@ export default function Board() {
         cards={opponentHand}
         socket={socket}
         hoveredIndexFromOpponent={opponentHoverIndex}
+        itemImages={itemImages}
       />
 
-      <div className="opponent-scored-cards">
-        {[
-          "2:pink",
-          "2:yellow",
-          "2:lightblue",
-          "3:blue",
-          "3:red",
-          "4:green",
-          "5:purple",
-        ].map((value, i) => (
-          <div
-            className={cn(`god god-${i}`, {
-              hidden: !opponentScoredCards.find(
-                (card) => `${card.value}:${card.color}` === value
-              ),
-            })}
-            key={i}
-            data-value={+value[0]}
-            data-count={
-              opponentScoredCards.filter(
-                (card) => `${card.value}:${card.color}` === value
-              ).length
-            }
-          >
-            <div className="content">
-              <span>{+value[0]}</span>
-              <span>{+value[0]}</span>
-            </div>
-          </div>
-        ))}
-      </div>
       <div className="gods">
-        {[2, 2, 2, 3, 3, 4, 5].map((value, i) => (
-          <div className={`god god-${i}`} key={i} data-value={value}>
-            <div className="content">
-              <span>{value}</span>
-              <span>{value}</span>
+        {GODS_CONFIG.map((item, i) => {
+          const godImg = godImages[item.col];
+          const owner = favors[item.col];
+          const isMyFavor = owner === socket.id;
+          const isOpponentFavor = owner && owner !== socket.id;
+          
+          // Check scored cards using the god's color and value
+          const playerScoreCount = scoredCards.filter(c => c.value === item.val && c.color === item.col).length;
+          const oppScoreCount = opponentScoredCards.filter(c => c.value === item.val && c.color === item.col).length;
+
+          return (
+            <div className="god-column" key={i}>
+              {/* Opponent Scored Marker */}
+              <div className={cn("scored-marker", { visible: oppScoreCount > 0 })}>
+                 {oppScoreCount > 0 && (
+                   <div className="content">
+                     <span>{item.val}</span>
+                   </div>
+                 )}
+              </div>
+
+              {/* God Card */}
+              <div 
+              className={cn("god", item.col, {
+                  'favor-me': isMyFavor,
+                  'favor-opponent': isOpponentFavor
+              })} 
+                data-value={item.val}
+              >
+                <img 
+                  className="god-img"
+                  src={godImg || ""}
+                  alt={item.name}
+                />
+                <div className="content">
+                  <span>{item.val}</span>
+                  <span>{item.val}</span>
+                </div>
+                {/* Visual indicator of favor */}
+                {isMyFavor && <div className="favor-indicator favor-indicator-me">YOURS</div>}
+                {isOpponentFavor && <div className="favor-indicator favor-indicator-opp">ENEMY</div>}
+              </div>
+
+              {/* Player Scored Marker */}
+              <div className={cn("scored-marker", { visible: playerScoreCount > 0 })}>
+                 {playerScoreCount > 0 && (
+                   <div className="content">
+                     <span>{item.val}</span>
+                   </div>
+                 )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="player-scored-cards">
-        {[
-          "2:pink",
-          "2:yellow",
-          "2:lightblue",
-          "3:blue",
-          "3:red",
-          "4:green",
-          "5:purple",
-        ].map((value, i) => (
-          <div
-            className={cn(`god god-${i}`, {
-              hidden: !scoredCards.find(
-                (card) => `${card.value}:${card.color}` === value
-              ),
-            })}
-            key={i}
-            data-value={+value[0]}
-            data-count={
-              scoredCards.filter(
-                (card) => `${card.value}:${card.color}` === value
-              ).length
-            }
-          >
-            <div className="content">
-              <span>{+value[0]}</span>
-              <span>{+value[0]}</span>
-            </div>
-          </div>
-        ))}
+        )})}
       </div>
 
       <Hand
@@ -142,10 +182,11 @@ export default function Board() {
             : hand
         }
         socket={socket}
-        hoveredIndexFromOpponent={null} // This prop is not used in the player hand, so we pass null
+        hoveredIndexFromOpponent={null} 
         pickedCards={pickedCards}
         overlayOption={overlayOption}
         setPickedCards={setPickedCards}
+        itemImages={itemImages}
       />
     </div>
   );

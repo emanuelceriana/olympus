@@ -11,6 +11,7 @@ export const Hand = ({
   overlayOption,
   pickedCards,
   setPickedCards,
+  itemImages,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -46,6 +47,7 @@ export const Hand = ({
         const isHovered = i === effectiveHoveredIndex;
         const style = getFanStyle(i, total, isHovered);
         const showCardDetails = isGameStarted && !isOpponent;
+        const itemImg = showCardDetails && itemImages ? itemImages[card.color] : null;
 
         return (
           <div
@@ -58,6 +60,7 @@ export const Hand = ({
             onMouseLeave={() => handleMouseLeave(null)}
             onClick={() => handlePickCards(card)}
           >
+             {itemImg && <img src={itemImg} className="item-image" alt="" />}
             {showCardDetails && <div className="number">{card.value}</div>}
           </div>
         );
