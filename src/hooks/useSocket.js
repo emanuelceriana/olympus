@@ -7,7 +7,91 @@ export default function useSocket() {
   const [role, setRole] = useState(null);
   const [deck, setDeck] = useState(null);
   const [allCards, setAllCards] = useState([]);
+  const [myDiscarded, setMyDiscarded] = useState([]);
   const [discarded, setDiscarded] = useState(null);
+
+  useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.on(
+      "game-start",
+      ({
+        availableActions,
+        opponentAvailableActions,
+        role,
+        hand,
+        opponentHand,
+        discarded,
+        myDiscarded,
+        deck,
+        secretCard,
+        config: { allCards },
+      }) => {
+        setAvailableActions(availableActions);
+        setOpponentAvailableActions(opponentAvailableActions);
+        setRole(role);
+        setHand(hand);
+        setDeck(deck);
+        setOpponentHand(opponentHand);
+        setAllCards(allCards);
+        setDiscarded(discarded);
+        setMyDiscarded(myDiscarded || []);
+        setIsGameStarted(true);
+        setSecretCard(secretCard);
+      }
+    );
+
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected");
+    });
+
+    return () => {
+      socket.off("game-start");
+    };
+  }, []);
+
+  // ... (draw-card, turn-start, oponent-hand-updated hooks remain unchanged)
+
+  useEffect(() => {
+       socket.on("new-round", ({
+           hand,
+           opponentHand,
+           discarded,
+           myDiscarded,
+           deck,
+           availableActions,
+           opponentAvailableActions,
+           favors
+       })=> {
+           setHand(hand);
+           setOpponentHand(opponentHand);
+           setDiscarded(discarded);
+           setMyDiscarded(myDiscarded || []);
+           setDeck(deck);
+           setAvailableActions(availableActions);
+           setOpponentAvailableActions(opponentAvailableActions);
+           setFavors(favors);
+           setScoredCards([]);
+           setOpponentScoredCards([]);
+           setSecretCard(null);
+       });
+       // ... game-over handler
+  }, []); // Reusing the existing useEffect block for new-round might be cleaner by merging edits but let's see.
+
+  useEffect(() => {
+    socket.on("discard-action-clean-up", ({ availableActions, hand, discarded, myDiscarded }) => {
+      setOverlayOption(null);
+      setAvailableActions(availableActions);
+      setHand(hand);
+      setDiscarded(discarded);
+      setMyDiscarded(myDiscarded);
+    });
+    // ...
+  }, []);
+
+
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [opponentHoverIndex, setOpponentHoverIndex] = useState(null);
@@ -33,6 +117,7 @@ export default function useSocket() {
         hand,
         opponentHand,
         discarded,
+        myDiscarded,
         deck,
         secretCard,
         config: { allCards },
@@ -45,6 +130,7 @@ export default function useSocket() {
         setOpponentHand(opponentHand);
         setAllCards(allCards);
         setDiscarded(discarded);
+        setMyDiscarded(myDiscarded || []);
         setIsGameStarted(true);
         setSecretCard(secretCard);
       }
@@ -182,6 +268,7 @@ export default function useSocket() {
            hand,
            opponentHand,
            discarded,
+           myDiscarded,
            deck,
            availableActions,
            opponentAvailableActions,
@@ -190,6 +277,7 @@ export default function useSocket() {
            setHand(hand);
            setOpponentHand(opponentHand);
            setDiscarded(discarded);
+           setMyDiscarded(myDiscarded || []);
            setDeck(deck);
            setAvailableActions(availableActions);
            setOpponentAvailableActions(opponentAvailableActions);
@@ -213,11 +301,12 @@ export default function useSocket() {
   }, []);
 
   useEffect(() => {
-    socket.on("discard-action-clean-up", ({ availableActions, hand, discarded }) => {
+    socket.on("discard-action-clean-up", ({ availableActions, hand, discarded, myDiscarded }) => {
       setOverlayOption(null);
       setAvailableActions(availableActions);
       setHand(hand);
       setDiscarded(discarded);
+      setMyDiscarded(myDiscarded);
     });
 
     return () => {
@@ -266,6 +355,22 @@ export default function useSocket() {
     [allCards, hand]
   );
 
+  const discardedCards = useMemo(
+    () =>
+      discarded
+        ? discarded.map((cardId) => allCards.find((c) => c.id === cardId)).filter(Boolean)
+        : [],
+    [allCards, discarded]
+  );
+
+  const myDiscardedCards = useMemo(
+    () =>
+      myDiscarded
+        ? myDiscarded.map((cardId) => allCards.find((c) => c.id === cardId)).filter(Boolean)
+        : [],
+    [allCards, myDiscarded]
+  );
+
   console.log("scoredCards", scoredCards);
   console.log("opponentHand", opponentHand);
   console.log("secretCard", secretCard);
@@ -283,6 +388,8 @@ export default function useSocket() {
     isGameStarted,
     role,
     discarded,
+    discardedCards,
+    myDiscardedCards,
     isMyTurn,
     actionResolver,
     overlayOption,
@@ -290,6 +397,7 @@ export default function useSocket() {
     opponentScoredCards,
     secretCard,
     setOverlayOption,
+
     favors,
     winner
   };

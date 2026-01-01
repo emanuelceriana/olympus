@@ -216,6 +216,7 @@
   /* Intrinsic size driven by image content inside constraints */
   width: auto;
   height: auto;
+  position: relative;
 
   /* Constraints relative to column size */
   max-width: 100%;
@@ -375,6 +376,48 @@
   box-shadow:
     3px -3px 0 0 rgba(232, 185, 35, 0.3),
     var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.4));
+}
+
+/* ==================== GOD TOKENS ==================== */
+.god-token {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  z-index: 20;
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
+  /* External shadow for the image */
+  transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  /* Bouncy transition */
+  object-fit: contain;
+}
+
+/* Center Position (Default) */
+.token-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Player Favor (Bottom) */
+.token-player {
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Opponent Favor (Top) */
+.token-opponent {
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .god-token {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 /* ==================== MOBILE ==================== */

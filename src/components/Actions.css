@@ -94,24 +94,69 @@
 /* ==================== PLAYER CARDS (Secret & Discarded) ==================== */
 .player-cards {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  /* Align bottom to match */
   justify-content: center;
-  gap: 0.5rem;
+  gap: 4px;
+  /* Tight gap */
   flex: 0;
+  width: 100%;
+  padding: 0 4px;
 }
 
-.secret-card,
-.discarded-cards {
+.slot-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.slot-label {
+  font-size: 0.6rem;
+  color: var(--color-gold, #E8B923);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.discard-slots-row {
+  display: flex;
+  gap: 4px;
+}
+
+.card-slot {
   width: 45px;
-  aspect-ratio: 5/7;
-  border: 2px solid var(--color-gold-dark, #C9A221);
+  aspect-ratio: 5 / 7;
   border-radius: 6px;
-  background: rgba(26, 37, 64, 0.5);
+  background: rgba(26, 37, 64, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  border: 1px dashed rgba(232, 185, 35, 0.3);
+  /* Default explicit empty slot style */
 }
+
+.card-slot.secret-card {
+  border: 2px solid var(--color-gold-dark, #C9A221);
+  background: rgba(26, 37, 64, 0.5);
+  border-style: solid;
+}
+
+.card-slot.spacer {
+  width: 10px;
+  border: none;
+  background: transparent;
+}
+
+/* 
+.discarded-preview:hover {
+    transform: scale(1.5);
+    z-index: 100;
+} 
+*/
+
+/* Recycle existing secret-card content styles? Yes, kept above */
 
 .secret-card .content {
   height: 100%;
@@ -136,7 +181,78 @@
   text-align: end;
 }
 
-/* ==================== MOBILE ==================== */
+/* ==================== CARD CONTENT STYLING ==================== */
+.discarded-preview,
+.secret-card .content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(13, 20, 36, 0.8);
+  /* Dark background */
+  border: 2px solid #555;
+  /* Default border */
+  overflow: hidden;
+}
+
+.god-object-icon {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+.card-value {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  z-index: 2;
+}
+
+/* ==================== GOD COLORS (Borders) ==================== */
+.discarded-preview.pink,
+.content.pink {
+  border-color: #FF69B4;
+}
+
+.discarded-preview.lightblue,
+.content.lightblue {
+  border-color: #4FC3F7;
+}
+
+.discarded-preview.green,
+.content.green {
+  border-color: #66BB6A;
+}
+
+.discarded-preview.red,
+.content.red {
+  border-color: #EF5350;
+}
+
+.discarded-preview.gold,
+.content.gold {
+  border-color: #FFD700;
+}
+
+.discarded-preview.purple,
+.content.purple {
+  border-color: #AB47BC;
+}
+
+.discarded-preview.yellow,
+.content.yellow {
+  border-color: #FFEE58;
+}
+
+/* Mobile Adjustments */
 @media (max-width: 768px) {
   .actions {
     padding: 0.5rem;
@@ -153,8 +269,15 @@
     width: 45px;
   }
 
-  .secret-card,
-  .discarded-cards {
+  /* .secret-card & .discarded-cards removed to use card-slot sizing */
+
+  .card-slot {
     width: 38px;
   }
+
+  .slot-label {
+    font-size: 0.5rem;
+  }
 }
+
+```

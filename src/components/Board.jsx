@@ -1,3 +1,4 @@
+import coinImg from "../assets/coin.png";
 import { useState } from "react";
 import { Hand } from "./Hand";
 import { Actions } from "./Actions";
@@ -66,9 +67,11 @@ export default function Board() {
     opponentAvailableActions,
     hand,
     deck,
-    discarded,
     handCards,
     opponentHand,
+    discarded,
+    discardedCards,
+    myDiscardedCards,
     isGameStarted,
     opponentHoverIndex,
     isMyTurn,
@@ -105,9 +108,12 @@ export default function Board() {
         setOverlayOption={setOverlayOption}
         deck={deck}
         discarded={discarded}
+        discardedCards={discardedCards}
+        myDiscardedCards={myDiscardedCards}
         secretCard={secretCard}
         availableActions={availableActions}
         opponentAvailableActions={opponentAvailableActions}
+        itemImages={itemImages}
       />
       <Hand
         isGameStarted={isGameStarted}
@@ -153,6 +159,17 @@ export default function Board() {
                   className="god-img"
                   src={godImg || ""}
                   alt={item.name}
+                />
+                
+                {/* Favor Token */}
+                <img 
+                  src={coinImg} 
+                  className={cn("god-token", {
+                      "token-center": !owner,
+                      "token-player": isMyFavor,
+                      "token-opponent": isOpponentFavor
+                  })}
+                  alt="token"
                 />
                 <div className="content">
                   <span>{item.val}</span>
