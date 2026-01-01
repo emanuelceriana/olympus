@@ -13,13 +13,12 @@ export const CompetitionActionResolver = ({ socket, pickedCards }) => {
 
   return (
     <div className="action-container resolver">
-      <h2>⚔️ Oferta de Competencia</h2>
       <p className="action-description">
         Tu oponente te ofrece <strong>2 grupos</strong> de cartas.
         Elige el grupo que deseas quedarte. El otro será para tu oponente.
       </p>
 
-      <p className="instruction-highlight">👆 Haz clic en el grupo que deseas</p>
+      <p className="instruction-highlight">Haz clic en el grupo que deseas</p>
 
       <div className="competition-sets resolver-sets">
         {pickedCards.map((set, setIndex) => (

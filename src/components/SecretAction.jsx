@@ -17,7 +17,6 @@ export const SecretAction = ({
 
   return (
     <div className="action-container">
-      <h2>🔮 Secreto Divino</h2>
       <p className="action-description">
         Elige <strong>1 carta</strong> de tu mano para guardar en secreto. 
         Esta carta se revelará al final de la ronda para determinar el favor de los dioses.
@@ -49,7 +48,7 @@ export const SecretAction = ({
 
       {pickedCards.length === requiredCards && (
         <button onClick={triggerSecretAction} className="action-confirm-btn">
-          ⚡ Consagrar Secreto
+          Guardar
         </button>
       )}
     </div>

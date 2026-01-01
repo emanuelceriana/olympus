@@ -5,6 +5,7 @@ export const GiftAction = ({
   overlayOption,
   pickedCards,
   handleRemoveCard,
+  setCanClose,
 }) => {
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
 
@@ -13,7 +14,8 @@ export const GiftAction = ({
       pickedCards,
     });
     setWaitingForOpponent(true);
-  }, [pickedCards, socket]);
+    setCanClose(false);
+  }, [pickedCards, socket, setCanClose]);
 
   const requiredCards = 3;
   const progress = pickedCards.length;
@@ -21,7 +23,7 @@ export const GiftAction = ({
   if (waitingForOpponent) {
     return (
       <div className="action-container waiting">
-        <h2>⏳ Esperando al Oponente...</h2>
+        <h2>Esperando al Oponente...</h2>
         <p className="action-description">
           Tu oponente está eligiendo una de las 3 cartas que ofreciste.
           Las 2 restantes serán tuyas.
@@ -40,7 +42,6 @@ export const GiftAction = ({
 
   return (
     <div className="action-container">
-      <h2>🎁 Regalo Divino</h2>
       <p className="action-description">
         Elige <strong>3 cartas</strong> para ofrecer a tu oponente.
         Él elegirá <strong>1</strong> para quedarse y las otras <strong>2</strong> serán tuyas.
@@ -74,7 +75,7 @@ export const GiftAction = ({
 
       {pickedCards.length === requiredCards && (
         <button onClick={triggerGiftAction} className="action-confirm-btn">
-          🎁 Enviar Regalo
+          Ofrecer
         </button>
       )}
     </div>

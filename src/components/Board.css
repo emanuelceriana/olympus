@@ -24,9 +24,11 @@
 }
 
 .overlay h2 {
-  font-size: 2rem;
+  font-size: 3rem;
+  /* Bigger title */
   margin: 0;
   text-align: center;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* Close Button */
@@ -56,11 +58,13 @@
 }
 
 .overlay p {
-  font-size: 1rem;
+  font-size: 1.3rem;
+  /* Bigger description */
   color: var(--color-text-muted, #9BA3B5);
-  max-width: 500px;
+  max-width: 600px;
   text-align: center;
   margin: 0;
+  line-height: 1.5;
 }
 
 /* Cards in Overlay */
@@ -162,7 +166,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  gap: 0.5rem;
+  gap: 1rem;
   height: 100%;
   width: 100%;
 }
@@ -189,6 +193,7 @@
   border-radius: 4px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  position: relative;
 }
 
 .scored-marker.visible {

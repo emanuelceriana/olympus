@@ -3,6 +3,9 @@ import { Hand } from "./Hand";
 import { Actions } from "./Actions";
 import useSocket from "../hooks/useSocket";
 import "./Board.css";
+import "./Board.css";
+import "./StackCounter.css";
+import "./WaitingScreen.css";
 import { ActionOverlay } from "./ActionOverlay";
 import cn from "classnames";
 
@@ -133,6 +136,7 @@ export default function Board() {
                  {oppScoreCount > 0 && (
                    <div className="content">
                      <span>{item.val}</span>
+                     {oppScoreCount > 0 && <span className="stack-count">x{oppScoreCount}</span>}
                    </div>
                  )}
               </div>
@@ -154,9 +158,6 @@ export default function Board() {
                   <span>{item.val}</span>
                   <span>{item.val}</span>
                 </div>
-                {/* Visual indicator of favor */}
-                {isMyFavor && <div className="favor-indicator favor-indicator-me">YOURS</div>}
-                {isOpponentFavor && <div className="favor-indicator favor-indicator-opp">ENEMY</div>}
               </div>
 
               {/* Player Scored Marker */}
@@ -164,6 +165,7 @@ export default function Board() {
                  {playerScoreCount > 0 && (
                    <div className="content">
                      <span>{item.val}</span>
+                     {playerScoreCount > 0 && <span className="stack-count">x{playerScoreCount}</span>}
                    </div>
                  )}
               </div>
@@ -179,15 +181,17 @@ export default function Board() {
                 (card) =>
                   !pickedCards.find((pickedCard) => pickedCard.id === card.id)
               )
-            : hand
+            : []
         }
         socket={socket}
         hoveredIndexFromOpponent={null} 
         pickedCards={pickedCards}
-        overlayOption={overlayOption}
+        overlayOption={overlayOption || actionResolver?.action}
         setPickedCards={setPickedCards}
         itemImages={itemImages}
       />
+
+
     </div>
   );
 }

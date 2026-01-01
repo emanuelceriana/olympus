@@ -4,7 +4,9 @@ export const CompetitionAction = ({
   socket,
   overlayOption,
   pickedCards,
+
   handleRemoveCard,
+  setCanClose,
 }) => {
   const [set1Ids, setSet1Ids] = useState([]);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
@@ -15,9 +17,7 @@ export const CompetitionAction = ({
     if (set1Ids.includes(cardId)) {
       setSet1Ids((prev) => prev.filter((id) => id !== cardId));
     } else {
-      if (set1Ids.length < 2) {
-        setSet1Ids((prev) => [...prev, cardId]);
-      }
+      setSet1Ids((prev) => [...prev, cardId]);
     }
   };
 
@@ -31,7 +31,8 @@ export const CompetitionAction = ({
       pickedCards: [set1, set2],
     });
     setWaitingForOpponent(true);
-  }, [pickedCards, set1Ids, socket]);
+    setCanClose(false);
+  }, [pickedCards, set1Ids, socket, setCanClose]);
 
   const requiredCards = 4;
   const progress = pickedCards.length;
@@ -39,7 +40,7 @@ export const CompetitionAction = ({
   if (waitingForOpponent) {
     return (
       <div className="action-container waiting">
-        <h2>⏳ Esperando al Oponente...</h2>
+        <h2>Esperando al Oponente...</h2>
         <p className="action-description">
           Tu oponente está eligiendo uno de los dos grupos que le ofreciste.
         </p>
@@ -74,7 +75,6 @@ export const CompetitionAction = ({
   if (showSplitPhase && pickedCards.length === 4) {
     return (
       <div className="action-container">
-        <h2>⚔️ Dividir los Grupos</h2>
         <p className="action-description">
           Haz clic en <strong>2 cartas</strong> para asignarlas al <strong>Grupo 1</strong>.
           Las otras 2 irán automáticamente al Grupo 2.
@@ -83,7 +83,9 @@ export const CompetitionAction = ({
 
         <div className="competition-sets split-mode">
           <div className="card-set">
-            <h4>Grupo 1 ({set1Ids.length}/2)</h4>
+            <h4 style={{ color: set1Ids.length !== 2 ? '#ff4d4d' : 'inherit' }}>
+              Grupo 1 ({set1Ids.length}/2)
+            </h4>
             <div className="set-cards">
               {pickedCards.filter((c) => set1Ids.includes(c.id)).map((card) => (
                 <div
@@ -102,7 +104,9 @@ export const CompetitionAction = ({
             </div>
           </div>
           <div className="card-set">
-            <h4>Grupo 2 ({2 - (2 - (4 - set1Ids.length - 2))}/2)</h4>
+            <h4 style={{ color: (4 - set1Ids.length) !== 2 ? '#ff4d4d' : 'inherit' }}>
+              Grupo 2 ({4 - set1Ids.length}/2)
+            </h4>
             <div className="set-cards">
               {pickedCards.filter((c) => !set1Ids.includes(c.id)).map((card) => (
                 <div
@@ -123,7 +127,7 @@ export const CompetitionAction = ({
           </button>
           {set1Ids.length === 2 && (
             <button onClick={triggerCompetitionAction} className="action-confirm-btn">
-              ⚔️ Ofrecer Grupos
+             Ofrecer Grupos
             </button>
           )}
         </div>
@@ -134,7 +138,6 @@ export const CompetitionAction = ({
   // Selection phase
   return (
     <div className="action-container">
-      <h2>⚔️ Competencia Olímpica</h2>
       <p className="action-description">
         Elige <strong>4 cartas</strong> de tu mano. Luego las dividirás en 2 grupos de 2.
         Tu oponente elegirá un grupo y el otro será tuyo.
@@ -169,7 +172,7 @@ export const CompetitionAction = ({
           onClick={() => setShowSplitPhase(true)}
           className="action-confirm-btn"
         >
-          Siguiente: Dividir en Grupos →
+          Dividir en Grupos
         </button>
       )}
     </div>

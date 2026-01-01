@@ -1,0 +1,38 @@
+.waiting-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 15, 28, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    color: #fff;
+    text-align: center;
+}
+
+.waiting-content h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2.5rem;
+    color: #FFD700;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.olympus-loader {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 215, 0, 0.1);
+    border-left-color: #FFD700;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

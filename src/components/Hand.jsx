@@ -41,7 +41,7 @@ export const Hand = ({
   );
 
   return isGameStarted || (!isGameStarted && !isOpponent) ? (
-    <div className={`hand ${isOpponent ? "opponent-hand" : "player-hand"}`}>
+    <div className={`hand ${isOpponent ? "opponent-hand" : "player-hand"} ${overlayOption ? "overlay-active" : ""}`}>
       {cards.map((card, i, arr) => {
         const total = arr.length;
         const isHovered = i === effectiveHoveredIndex;
@@ -67,6 +67,11 @@ export const Hand = ({
       })}
     </div>
   ) : (
-    <div className="waiting-message">WAITING PLAYER 2...</div>
+    <div className="hand opponent-hand">
+       <div className="waiting-container">
+          <h1>Esperando Oponente</h1>
+          <div className="olympus-loader" />
+       </div>
+    </div>
   );
 };

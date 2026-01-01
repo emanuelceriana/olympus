@@ -13,13 +13,12 @@ export const GiftActionResolver = ({ socket, pickedCards }) => {
 
   return (
     <div className="action-container resolver">
-      <h2>🎁 Regalo Recibido</h2>
       <p className="action-description">
         Tu oponente te ofrece estas <strong>3 cartas</strong>.
         Elige <strong>1</strong> para quedártela. Las otras 2 serán para tu oponente.
       </p>
       
-      <p className="instruction-highlight">👆 Haz clic en la carta que deseas quedarte</p>
+      <p className="instruction-highlight">Haz clic en la carta que deseas quedarte</p>
 
       <div className="cards-list resolver-cards">
         {pickedCards.map((card) => (

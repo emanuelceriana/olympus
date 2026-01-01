@@ -1,0 +1,17 @@
+/* Add to Board.css or index.css */
+.stack-count {
+    position: absolute;
+    top: 50%;
+    right: -22px;
+    transform: translateY(-50%);
+    background: transparent;
+    color: #FFD700;
+    font-size: 0.9rem;
+    font-weight: 800;
+    width: auto;
+    height: auto;
+    display: block;
+    box-shadow: none;
+    border: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}

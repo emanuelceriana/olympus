@@ -15,10 +15,9 @@ export const DiscardAction = ({
 
   return (
     <div className="action-container">
-      <h2>🔥 Ofrenda Sagrada</h2>
       <p className="action-description">
-        Elige <strong>2 cartas</strong> de tu mano para sacrificar a los dioses.
-        Estas cartas serán descartadas y no contarán para nadie.
+        Elige <strong>2 cartas</strong> de tu mano.
+        Estas cartas serán descartadas en secreto y no contarán para la puntuación final.
       </p>
       
       <div className="step-indicator">
@@ -48,7 +47,7 @@ export const DiscardAction = ({
 
       {pickedCards.length === requiredCards && (
         <button onClick={triggerDiscardAction} className="action-confirm-btn">
-          🔥 Realizar Ofrenda
+          Descartar
         </button>
       )}
     </div>

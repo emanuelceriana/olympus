@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SecretAction } from "./SecretAction";
 import { DiscardAction } from "./DiscardAction";
 import { GiftAction } from "./GiftAction";
@@ -15,6 +15,8 @@ export const ActionOverlay = ({
   actionResolver,
   onClose,
 }) => {
+  const [canClose, setCanClose] = useState(true);
+
   useEffect(() => {
     return () => {
       setPickedCards([]);
@@ -54,6 +56,7 @@ export const ActionOverlay = ({
               overlayOption={overlayOption}
               pickedCards={pickedCards}
               handleRemoveCard={handleRemoveCard}
+              setCanClose={setCanClose}
             />
           );
         case 2:
@@ -63,6 +66,7 @@ export const ActionOverlay = ({
               overlayOption={overlayOption}
               pickedCards={pickedCards}
               handleRemoveCard={handleRemoveCard}
+              setCanClose={setCanClose}
             />
           );
         case 3:
@@ -72,6 +76,7 @@ export const ActionOverlay = ({
               overlayOption={overlayOption}
               pickedCards={pickedCards}
               handleRemoveCard={handleRemoveCard}
+              setCanClose={setCanClose}
             />
           );
         case 4:
@@ -81,6 +86,7 @@ export const ActionOverlay = ({
               overlayOption={overlayOption}
               pickedCards={pickedCards}
               handleRemoveCard={handleRemoveCard}
+              setCanClose={setCanClose}
             />
           );
         default:
@@ -95,7 +101,7 @@ export const ActionOverlay = ({
 
   return (
     <div className="overlay">
-      {!isResolving && onClose && (
+      {!isResolving && onClose && canClose && (
         <button className="overlay-close-btn" onClick={onClose} title="Cancelar acción">
           ✕
         </button>
