@@ -32,6 +32,10 @@ export const Hand = ({
   const handlePickCards = useCallback(
     (cardId) => {
       if (isOpponent) return; // Prevent picking cards from opponent's hand
+      
+      // If we are not in an "active selection" mode (overlayOption is null or 0), ignore clicks.
+      // This prevents players from clicking their hand while waiting for opponent or resolving an action that doesn't involve hand picking.
+      if (!overlayOption) return; 
 
       if (pickedCards.length < overlayOption) {
         setPickedCards((prev) => [...prev, cardId]);
@@ -69,7 +73,7 @@ export const Hand = ({
   ) : (
     <div className="hand opponent-hand">
        <div className="waiting-container">
-          <h1>Esperando Oponente</h1>
+          <h1>Waiting for Opponent</h1>
           <div className="olympus-loader" />
        </div>
     </div>

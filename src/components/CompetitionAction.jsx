@@ -7,6 +7,7 @@ export const CompetitionAction = ({
 
   handleRemoveCard,
   setCanClose,
+  itemImages,
 }) => {
   const [set1Ids, setSet1Ids] = useState([]);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
@@ -40,29 +41,37 @@ export const CompetitionAction = ({
   if (waitingForOpponent) {
     return (
       <div className="action-container waiting">
-        <h2>Esperando al Oponente...</h2>
+        <h2>Waiting for Opponent...</h2>
         <p className="action-description">
-          Tu oponente está eligiendo uno de los dos grupos que le ofreciste.
+          Your opponent is choosing one of the two groups you offered.
         </p>
         <div className="competition-sets">
           <div className="card-set">
-            <h4>Grupo 1</h4>
+            <h4>Group 1</h4>
             <div className="set-cards">
-              {pickedCards.filter((c) => set1Ids.includes(c.id)).map((card) => (
-                <div className={`card ${card.color}`} key={card.id}>
-                  <div className="number">{card.value}</div>
-                </div>
-              ))}
+              {pickedCards.filter((c) => set1Ids.includes(c.id)).map((card) => {
+                 const itemImg = itemImages ? itemImages[card.color] : null;
+                 return (
+                    <div className={`card ${card.color}`} key={card.id}>
+                      {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                      <div className="number">{card.value}</div>
+                    </div>
+                 );
+              })}
             </div>
           </div>
           <div className="card-set">
-            <h4>Grupo 2</h4>
+            <h4>Group 2</h4>
             <div className="set-cards">
-              {pickedCards.filter((c) => !set1Ids.includes(c.id)).map((card) => (
-                <div className={`card ${card.color}`} key={card.id}>
-                  <div className="number">{card.value}</div>
-                </div>
-              ))}
+              {pickedCards.filter((c) => !set1Ids.includes(c.id)).map((card) => {
+                 const itemImg = itemImages ? itemImages[card.color] : null;
+                 return (
+                    <div className={`card ${card.color}`} key={card.id}>
+                      {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                      <div className="number">{card.value}</div>
+                    </div>
+                 );
+              })}
             </div>
           </div>
         </div>
@@ -76,27 +85,31 @@ export const CompetitionAction = ({
     return (
       <div className="action-container">
         <p className="action-description">
-          Haz clic en <strong>2 cartas</strong> para asignarlas al <strong>Grupo 1</strong>.
-          Las otras 2 irán automáticamente al Grupo 2.
-          Tu oponente elegirá uno de los grupos.
+          Click on <strong>2 cards</strong> to assign them to <strong>Group 1</strong>.
+          The other 2 will automatically go to Group 2.
+          Your opponent will choose one of the groups.
         </p>
 
         <div className="competition-sets split-mode">
           <div className="card-set">
             <h4 style={{ color: set1Ids.length !== 2 ? '#ff4d4d' : 'inherit' }}>
-              Grupo 1 ({set1Ids.length}/2)
+              Group 1 ({set1Ids.length}/2)
             </h4>
             <div className="set-cards">
-              {pickedCards.filter((c) => set1Ids.includes(c.id)).map((card) => (
-                <div
-                  className={`card ${card.color} selected-set`}
-                  key={card.id}
-                  onClick={() => toggleSet1(card.id)}
-                >
-                  <div className="number">{card.value}</div>
-                </div>
-              ))}
-              {Array(2 - set1Ids.length)
+              {pickedCards.filter((c) => set1Ids.includes(c.id)).map((card) => {
+                 const itemImg = itemImages ? itemImages[card.color] : null;
+                 return (
+                    <div
+                      className={`card ${card.color} selected-set`}
+                      key={card.id}
+                      onClick={() => toggleSet1(card.id)}
+                    >
+                      {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                      <div className="number">{card.value}</div>
+                    </div>
+                 );
+              })}
+              {Array(Math.max(0, 2 - set1Ids.length))
                 .fill(null)
                 .map((_, i) => (
                   <div className="card-border small" key={`empty-1-${i}`}></div>
@@ -105,29 +118,33 @@ export const CompetitionAction = ({
           </div>
           <div className="card-set">
             <h4 style={{ color: (4 - set1Ids.length) !== 2 ? '#ff4d4d' : 'inherit' }}>
-              Grupo 2 ({4 - set1Ids.length}/2)
+              Group 2 ({4 - set1Ids.length}/2)
             </h4>
             <div className="set-cards">
-              {pickedCards.filter((c) => !set1Ids.includes(c.id)).map((card) => (
-                <div
-                  className={`card ${card.color}`}
-                  key={card.id}
-                  onClick={() => toggleSet1(card.id)}
-                >
-                  <div className="number">{card.value}</div>
-                </div>
-              ))}
+              {pickedCards.filter((c) => !set1Ids.includes(c.id)).map((card) => {
+                 const itemImg = itemImages ? itemImages[card.color] : null;
+                 return (
+                    <div
+                      className={`card ${card.color}`}
+                      key={card.id}
+                      onClick={() => toggleSet1(card.id)}
+                    >
+                      {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                      <div className="number">{card.value}</div>
+                    </div>
+                 );
+              })}
             </div>
           </div>
         </div>
 
         <div className="action-buttons">
           <button onClick={() => setShowSplitPhase(false)} className="secondary-btn">
-            ← Volver
+            ← Back
           </button>
           {set1Ids.length === 2 && (
             <button onClick={triggerCompetitionAction} className="action-confirm-btn">
-             Ofrecer Grupos
+             Offer Groups
             </button>
           )}
         </div>
@@ -139,27 +156,31 @@ export const CompetitionAction = ({
   return (
     <div className="action-container">
       <p className="action-description">
-        Elige <strong>4 cartas</strong> de tu mano. Luego las dividirás en 2 grupos de 2.
-        Tu oponente elegirá un grupo y el otro será tuyo.
+        Choose <strong>4 cards</strong> from your hand. Then you will split them into 2 groups of 2.
+        Your opponent will choose a group and the other will be yours.
       </p>
 
       <div className="step-indicator">
-        <span className={progress >= 1 ? "completed" : ""}>Carta 1</span>
-        <span className={progress >= 2 ? "completed" : ""}>Carta 2</span>
-        <span className={progress >= 3 ? "completed" : ""}>Carta 3</span>
-        <span className={progress >= 4 ? "completed" : ""}>Carta 4</span>
+        <span className={progress >= 1 ? "completed" : ""}>Card 1</span>
+        <span className={progress >= 2 ? "completed" : ""}>Card 2</span>
+        <span className={progress >= 3 ? "completed" : ""}>Card 3</span>
+        <span className={progress >= 4 ? "completed" : ""}>Card 4</span>
       </div>
 
       <div className="cards-list">
         {pickedCards.length > 0 &&
-          pickedCards.map((card) => (
-            <div className={`card ${card.color}`} key={card.id}>
-              <div className="number">{card.value}</div>
-              <div className="remove-btn" onClick={() => handleRemoveCard(card)}>
-                ✕
-              </div>
-            </div>
-          ))}
+          pickedCards.map((card) => {
+             const itemImg = itemImages ? itemImages[card.color] : null;
+             return (
+                <div className={`card ${card.color}`} key={card.id}>
+                  {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                  <div className="number">{card.value}</div>
+                  <div className="remove-btn" onClick={() => handleRemoveCard(card)}>
+                    ✕
+                  </div>
+                </div>
+            );
+          })}
         {Array(requiredCards - pickedCards.length)
           .fill(null)
           .map((_, i) => (
@@ -172,7 +193,7 @@ export const CompetitionAction = ({
           onClick={() => setShowSplitPhase(true)}
           className="action-confirm-btn"
         >
-          Dividir en Grupos
+          Split into Groups
         </button>
       )}
     </div>

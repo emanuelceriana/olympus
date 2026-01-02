@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-export const CompetitionActionResolver = ({ socket, pickedCards }) => {
+export const CompetitionActionResolver = ({ socket, pickedCards, itemImages }) => {
   const handleChooseSet = useCallback(
     (index) => {
       socket.emit("end-competition-action", {
@@ -14,11 +14,11 @@ export const CompetitionActionResolver = ({ socket, pickedCards }) => {
   return (
     <div className="action-container resolver">
       <p className="action-description">
-        Tu oponente te ofrece <strong>2 grupos</strong> de cartas.
-        Elige el grupo que deseas quedarte. El otro será para tu oponente.
+        Your opponent offers you <strong>2 groups</strong> of cards.
+        Choose the group you want to keep. The other will go to your opponent.
       </p>
 
-      <p className="instruction-highlight">Haz clic en el grupo que deseas</p>
+      <p className="instruction-highlight">Click on the group you want</p>
 
       <div className="competition-sets resolver-sets">
         {pickedCards.map((set, setIndex) => (
@@ -27,16 +27,20 @@ export const CompetitionActionResolver = ({ socket, pickedCards }) => {
             className="card-set selectable"
             onClick={() => handleChooseSet(setIndex)}
           >
-            <h4>Grupo {setIndex + 1}</h4>
+            <h4>Group {setIndex + 1}</h4>
             <div className="set-cards">
-              {set.map((card) => (
-                <div className={`card ${card.color}`} key={card.id}>
-                  <div className="number">{card.value}</div>
-                </div>
-              ))}
+              {set.map((card) => {
+                 const itemImg = itemImages ? itemImages[card.color] : null;
+                 return (
+                    <div className={`card ${card.color}`} key={card.id}>
+                      {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                      <div className="number">{card.value}</div>
+                    </div>
+                 );
+              })}
             </div>
             <div className="select-overlay">
-              <span>ELEGIR ESTE GRUPO</span>
+              <span>PICK THIS GROUP</span>
             </div>
           </div>
         ))}

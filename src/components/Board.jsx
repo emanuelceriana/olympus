@@ -1,6 +1,7 @@
 import coinImg from "../assets/coin.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Hand } from "./Hand";
+import { GameOver } from "./GameOver";
 import { Actions } from "./Actions";
 import useSocket from "../hooks/useSocket";
 import "./Board.css";
@@ -83,9 +84,12 @@ export default function Board() {
     setOverlayOption,
     favors,
     winner,
+    roundMessage
   } = useSocket();
 
   const [pickedCards, setPickedCards] = useState([]);
+  // Removed delayed notification logic as per user request (show immediately)
+
 
   return (
     <div className="board">
@@ -96,6 +100,7 @@ export default function Board() {
           pickedCards={pickedCards}
           setPickedCards={setPickedCards}
           actionResolver={actionResolver}
+          itemImages={itemImages}
           onClose={() => {
             setOverlayOption(null);
             setPickedCards([]);
@@ -190,25 +195,38 @@ export default function Board() {
         )})}
       </div>
 
-      <Hand
-        isGameStarted={isGameStarted}
-        cards={
-          isGameStarted
-            ? handCards.filter(
-                (card) =>
-                  !pickedCards.find((pickedCard) => pickedCard.id === card.id)
-              )
-            : []
-        }
-        socket={socket}
-        hoveredIndexFromOpponent={null} 
-        pickedCards={pickedCards}
-        overlayOption={overlayOption || actionResolver?.action}
-        setPickedCards={setPickedCards}
-        itemImages={itemImages}
-      />
+      {!actionResolver.action && (
+        <Hand
+          isGameStarted={isGameStarted}
+          cards={
+            isGameStarted
+              ? handCards.filter(
+                  (card) =>
+                    !pickedCards.find((pickedCard) => pickedCard.id === card.id)
+                )
+              : []
+          }
+          socket={socket}
+          hoveredIndexFromOpponent={null} 
+          pickedCards={pickedCards}
+          overlayOption={overlayOption}
+          setPickedCards={setPickedCards}
+          itemImages={itemImages}
+        />
+      )}
 
 
+      <GameOver winner={winner === socket.id ? "You" : (winner ? "Opponent" : null)} />
+      
+      {roundMessage && !winner && (
+        <div className="round-notification">
+            <div className="round-notification-content">
+                <h2>{roundMessage}</h2>
+                <div className="olympus-loader"></div>
+            </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+

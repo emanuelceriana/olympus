@@ -258,10 +258,19 @@ export default function useSocket() {
   const [favors, setFavors] = useState({});
   const [winner, setWinner] = useState(null);
 
+  const [roundMessage, setRoundMessage] = useState(null);
+
   useEffect(() => {
-      socket.on("round-end", ({ favors, scoredCards }) => {
+      socket.on("round-end", ({ favors, scoredCards, opponentScoredCards, isGameOver }) => {
           setFavors(favors);
-          setScoredCards(scoredCards); // Update to show revealed secrets
+          setScoredCards(scoredCards); 
+          setOpponentScoredCards(opponentScoredCards);
+          // Show different message based on whether game is ending
+          if (isGameOver) {
+              setRoundMessage("Finishing Game...");
+          } else {
+              setRoundMessage("Round Finished! Preparing Next Round...");
+          }
       });
 
        socket.on("new-round", ({
@@ -274,6 +283,7 @@ export default function useSocket() {
            opponentAvailableActions,
            favors
        })=> {
+           setRoundMessage(null);
            setHand(hand);
            setOpponentHand(opponentHand);
            setDiscarded(discarded);
@@ -285,12 +295,16 @@ export default function useSocket() {
            setScoredCards([]);
            setOpponentScoredCards([]);
            setSecretCard(null);
-           // Alert new round?
+           setActionResolver({});
+           setOverlayOption(null);
        });
 
        socket.on("game-over", ({ winner }) => {
-           setWinner(winner);
-           alert(winner + " Wins!"); // Simple alert for now
+           // Client-side delay before showing game over screen
+           setTimeout(() => {
+               setRoundMessage(null);
+               setWinner(winner);
+           }, 3000); // 3 second delay
        });
 
        return () => {
@@ -399,6 +413,7 @@ export default function useSocket() {
     setOverlayOption,
 
     favors,
-    winner
+    winner,
+    roundMessage
   };
 }

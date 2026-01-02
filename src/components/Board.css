@@ -127,13 +127,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 36px;
-  height: 36px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: rgba(229, 57, 53, 0.9);
   border: none;
   color: white;
-  font-size: 1rem;
+  font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -332,15 +332,13 @@
 
 /* Favor Indicators */
 .god.favor-me {
-  transform: translateY(8px) scale(1.05);
-  box-shadow: 0 0 30px 5px rgba(232, 185, 35, 0.6);
   border-color: #FFD700;
+  /* User requested NO other visual changes to the card itself */
 }
 
 .god.favor-opponent {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 0 30px 5px rgba(229, 57, 53, 0.6);
   border-color: #EF4444;
+  /* User requested NO other visual changes to the card itself */
 }
 
 .favor-indicator {
@@ -379,10 +377,12 @@
 }
 
 /* ==================== GOD TOKENS ==================== */
+/* ==================== GOD TOKENS ==================== */
 .god-token {
   position: absolute;
-  width: 32px;
-  height: 32px;
+  width: 28%;
+  /* Smaller responsive width */
+  height: auto;
   z-index: 20;
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
   /* External shadow for the image */
@@ -400,23 +400,86 @@
 
 /* Player Favor (Bottom) */
 .token-player {
-  top: 90%;
+  top: 85%;
+  /* Moved up from 90% for margin */
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
 /* Opponent Favor (Top) */
 .token-opponent {
-  top: 10%;
+  top: 15%;
+  /* Moved down from 10% for symmetry */
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+/* Round Notification - Top Message (No Overlay) */
+.round-notification {
+  position: absolute;
+  top: 14%;
+  /* Positioned in Player 2's zone/upper area */
+  left: calc(50% + 110px);
+  /* Centered in playable area */
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+  pointer-events: none;
+  /* Allow clicks through */
+}
+
+.round-notification-content {
+  background: rgba(10, 15, 28, 0.95);
+  border: 1px solid var(--border-gold);
+  border-radius: 50px;
+  /* Pill shape */
+  padding: 0.8rem 2.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  animation: slideDown 0.4s ease-out;
+}
+
+.round-notification h2 {
+  color: var(--color-gold);
+  margin: 0;
+  font-size: 1.2rem;
+  /* Much smaller, non-intrusive */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+
+.round-notification .olympus-loader {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .god-token {
-    width: 24px;
-    height: 24px;
+  .round-notification {
+    left: calc(50% + 40px);
   }
 }
 

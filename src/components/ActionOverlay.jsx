@@ -14,6 +14,7 @@ export const ActionOverlay = ({
   setPickedCards,
   actionResolver,
   onClose,
+  itemImages,
 }) => {
   const [canClose, setCanClose] = useState(true);
 
@@ -36,6 +37,7 @@ export const ActionOverlay = ({
               <GiftActionResolver
                 socket={socket}
                 pickedCards={actionResolver.pickedCards}
+                itemImages={itemImages}
               />
             );
           case 4:
@@ -43,57 +45,35 @@ export const ActionOverlay = ({
               <CompetitionActionResolver
                 socket={socket}
                 pickedCards={actionResolver.pickedCards}
+                itemImages={itemImages}
               />
             );
         }
       }
 
+      const commonProps = {
+          socket,
+          overlayOption,
+          pickedCards,
+          handleRemoveCard,
+          setCanClose,
+          itemImages
+      };
+
       switch (overlayOption) {
         case 1:
-          return (
-            <SecretAction
-              socket={socket}
-              overlayOption={overlayOption}
-              pickedCards={pickedCards}
-              handleRemoveCard={handleRemoveCard}
-              setCanClose={setCanClose}
-            />
-          );
+          return <SecretAction {...commonProps} />;
         case 2:
-          return (
-            <DiscardAction
-              socket={socket}
-              overlayOption={overlayOption}
-              pickedCards={pickedCards}
-              handleRemoveCard={handleRemoveCard}
-              setCanClose={setCanClose}
-            />
-          );
+          return <DiscardAction {...commonProps} />;
         case 3:
-          return (
-            <GiftAction
-              socket={socket}
-              overlayOption={overlayOption}
-              pickedCards={pickedCards}
-              handleRemoveCard={handleRemoveCard}
-              setCanClose={setCanClose}
-            />
-          );
+          return <GiftAction {...commonProps} />;
         case 4:
-          return (
-            <CompetitionAction
-              socket={socket}
-              overlayOption={overlayOption}
-              pickedCards={pickedCards}
-              handleRemoveCard={handleRemoveCard}
-              setCanClose={setCanClose}
-            />
-          );
+          return <CompetitionAction {...commonProps} />;
         default:
           return "";
       }
     },
-    [pickedCards, handleRemoveCard]
+    [pickedCards, handleRemoveCard, itemImages]
   );
 
   // Don't show close button when resolving opponent's action (must complete it)
@@ -102,7 +82,7 @@ export const ActionOverlay = ({
   return (
     <div className="overlay">
       {!isResolving && onClose && canClose && (
-        <button className="overlay-close-btn" onClick={onClose} title="Cancelar acción">
+        <button className="overlay-close-btn" onClick={onClose} title="Cancel">
           ✕
         </button>
       )}

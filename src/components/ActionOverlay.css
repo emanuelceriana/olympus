@@ -259,3 +259,32 @@
         height: 77px;
     }
 }
+
+/* Card Colors for Actions */
+.card.pink {
+    border-color: #FF1493;
+}
+
+.card.lightblue {
+    border-color: #4169E1;
+}
+
+.card.green {
+    border-color: #4ADE80;
+}
+
+.card.red {
+    border-color: #F87171;
+}
+
+.card.gold {
+    border-color: #FBBF24;
+}
+
+.card.purple {
+    border-color: #A78BFA;
+}
+
+.card.yellow {
+    border-color: #E8B923;
+}

@@ -6,6 +6,7 @@ export const GiftAction = ({
   pickedCards,
   handleRemoveCard,
   setCanClose,
+  itemImages,
 }) => {
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
 
@@ -23,17 +24,21 @@ export const GiftAction = ({
   if (waitingForOpponent) {
     return (
       <div className="action-container waiting">
-        <h2>Esperando al Oponente...</h2>
+        <h2>Waiting for Opponent...</h2>
         <p className="action-description">
-          Tu oponente está eligiendo una de las 3 cartas que ofreciste.
-          Las 2 restantes serán tuyas.
+          Your opponent is choosing one of the 3 cards you offered.
+          The remaining 2 will be yours.
         </p>
         <div className="cards-list">
-          {pickedCards.map((card) => (
-            <div className={`card ${card.color}`} key={card.id}>
-              <div className="number">{card.value}</div>
-            </div>
-          ))}
+          {pickedCards.map((card) => {
+             const itemImg = itemImages ? itemImages[card.color] : null;
+             return (
+                <div className={`card ${card.color}`} key={card.id}>
+                  {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                  <div className="number">{card.value}</div>
+                </div>
+             );
+          })}
         </div>
         <div className="loading-spinner"></div>
       </div>
@@ -43,29 +48,33 @@ export const GiftAction = ({
   return (
     <div className="action-container">
       <p className="action-description">
-        Elige <strong>3 cartas</strong> para ofrecer a tu oponente.
-        Él elegirá <strong>1</strong> para quedarse y las otras <strong>2</strong> serán tuyas.
+        Choose <strong>3 cards</strong> to offer to your opponent.
+        They will choose <strong>1</strong> to keep and the other <strong>2</strong> will be yours.
       </p>
       
       <div className="step-indicator">
-        <span className={progress >= 1 ? 'completed' : ''}>Paso 1: Primera carta</span>
-        <span className={progress >= 2 ? 'completed' : ''}>Paso 2: Segunda carta</span>
-        <span className={progress >= 3 ? 'completed' : ''}>Paso 3: Tercera carta</span>
+        <span className={progress >= 1 ? 'completed' : ''}>Step 1: First card</span>
+        <span className={progress >= 2 ? 'completed' : ''}>Step 2: Second card</span>
+        <span className={progress >= 3 ? 'completed' : ''}>Step 3: Third card</span>
       </div>
 
       <div className="cards-list">
         {pickedCards.length > 0 &&
-          pickedCards.map((card) => (
-            <div className={`card ${card.color}`} key={card.id}>
-              <div className="number">{card.value}</div>
-              <div
-                className="remove-btn"
-                onClick={() => handleRemoveCard(card)}
-              >
-                ✕
-              </div>
-            </div>
-          ))}
+          pickedCards.map((card) => {
+             const itemImg = itemImages ? itemImages[card.color] : null;
+             return (
+                <div className={`card ${card.color}`} key={card.id}>
+                  {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                  <div className="number">{card.value}</div>
+                  <div
+                    className="remove-btn"
+                    onClick={() => handleRemoveCard(card)}
+                  >
+                    ✕
+                  </div>
+                </div>
+            );
+          })}
         {Array(requiredCards - pickedCards.length)
           .fill(null)
           .map((_, i) => (
@@ -75,7 +84,7 @@ export const GiftAction = ({
 
       {pickedCards.length === requiredCards && (
         <button onClick={triggerGiftAction} className="action-confirm-btn">
-          Ofrecer
+          Offer
         </button>
       )}
     </div>

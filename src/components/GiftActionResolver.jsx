@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-export const GiftActionResolver = ({ socket, pickedCards }) => {
+export const GiftActionResolver = ({ socket, pickedCards, itemImages }) => {
   const handlePickCard = useCallback(
     (card) => {
       socket.emit("end-gift-action", {
@@ -14,25 +14,29 @@ export const GiftActionResolver = ({ socket, pickedCards }) => {
   return (
     <div className="action-container resolver">
       <p className="action-description">
-        Tu oponente te ofrece estas <strong>3 cartas</strong>.
-        Elige <strong>1</strong> para quedártela. Las otras 2 serán para tu oponente.
+        Your opponent offers you these <strong>3 cards</strong>.
+        Choose <strong>1</strong> to keep. The other 2 will go to your opponent.
       </p>
       
-      <p className="instruction-highlight">Haz clic en la carta que deseas quedarte</p>
+      <p className="instruction-highlight">Click on the card you want to keep</p>
 
       <div className="cards-list resolver-cards">
-        {pickedCards.map((card) => (
-          <div
-            className={`card ${card.color} selectable`}
-            key={card.id}
-            onClick={() => handlePickCard(card)}
-          >
-            <div className="number">{card.value}</div>
-            <div className="select-overlay">
-              <span>ELEGIR</span>
-            </div>
-          </div>
-        ))}
+        {pickedCards.map((card) => {
+           const itemImg = itemImages ? itemImages[card.color] : null;
+           return (
+              <div
+                className={`card ${card.color} selectable`}
+                key={card.id}
+                onClick={() => handlePickCard(card)}
+              >
+                {itemImg && <img src={itemImg} className="item-image" alt="" />}
+                <div className="number">{card.value}</div>
+                <div className="select-overlay">
+                  <span>PICK</span>
+                </div>
+              </div>
+           );
+        })}
       </div>
     </div>
   );
