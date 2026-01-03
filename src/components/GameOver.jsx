@@ -1,10 +1,10 @@
-import React from "react";
+import { createPortal } from "react-dom";
 import "./GameOver.css";
 
 export const GameOver = ({ winner, onRestart }) => {
   if (!winner) return null;
 
-  return (
+  return createPortal(
     <div className="game-over-overlay">
       <div className="game-over-content">
         <h1>GAME OVER</h1>
@@ -16,6 +16,7 @@ export const GameOver = ({ winner, onRestart }) => {
           Play Again
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
