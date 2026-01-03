@@ -61,7 +61,7 @@ const GODS_CONFIG = [
   { val: 5, col: 'yellow', name: 'Zeus' },        // King of Gods - most important
 ];
 
-export default function Board() {
+export default function Board({ initialData, onReturnToLobby }) {
   const {
     socket,
     availableActions,
@@ -85,7 +85,7 @@ export default function Board() {
     favors,
     winner,
     roundMessage
-  } = useSocket();
+  } = useSocket(initialData);
 
   const [pickedCards, setPickedCards] = useState([]);
   // Removed delayed notification logic as per user request (show immediately)
@@ -93,6 +93,12 @@ export default function Board() {
 
   return (
     <div className="board">
+      {/* Turn Indicator */}
+      {isGameStarted && !winner && (
+        <div className={`turn-indicator ${isMyTurn ? 'your-turn' : 'opponent-turn'}`}>
+          {isMyTurn ? '⚔️ Your Turn' : '⏳ Opponent\'s Turn'}
+        </div>
+      )}
       {(overlayOption || actionResolver.action) && (
         <ActionOverlay
           socket={socket}

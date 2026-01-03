@@ -1,47 +1,58 @@
 import { useEffect, useState, useMemo, act } from "react";
 import socket from "../socket";
 
-export default function useSocket() {
-  const [hand, setHand] = useState([...Array(6)]);
-  const [opponentHand, setOpponentHand] = useState([...Array(6)]);
-  const [role, setRole] = useState(null);
-  const [deck, setDeck] = useState(null);
-  const [allCards, setAllCards] = useState([]);
-  const [myDiscarded, setMyDiscarded] = useState([]);
-  const [discarded, setDiscarded] = useState(null);
+export default function useSocket(initialData = null) {
+  const [hand, setHand] = useState(initialData?.hand || [...Array(6)]);
+  const [opponentHand, setOpponentHand] = useState(initialData?.opponentHand || [...Array(6)]);
+  const [role, setRole] = useState(initialData?.role || null);
+  const [deck, setDeck] = useState(initialData?.deck || null);
+  const [allCards, setAllCards] = useState(initialData?.config?.allCards || []);
+  const [myDiscarded, setMyDiscarded] = useState(initialData?.myDiscarded || []);
+  const [discarded, setDiscarded] = useState(initialData?.discarded || null);
+
+  // Initialize game state from Lobby data if available
+  const [isGameStarted, setIsGameStarted] = useState(!!initialData);
+  const [availableActions, setAvailableActions] = useState(initialData?.availableActions || []);
+  const [opponentAvailableActions, setOpponentAvailableActions] = useState(initialData?.opponentAvailableActions || []);
+  const [secretCard, setSecretCard] = useState(initialData?.secretCard || null);
+  const [scoredCards, setScoredCards] = useState(initialData?.scoredCards || []);
+  const [opponentScoredCards, setOpponentScoredCards] = useState(initialData?.opponentScoredCards || []);
 
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.on(
-      "game-start",
-      ({
-        availableActions,
-        opponentAvailableActions,
-        role,
-        hand,
-        opponentHand,
-        discarded,
-        myDiscarded,
-        deck,
-        secretCard,
-        config: { allCards },
-      }) => {
-        setAvailableActions(availableActions);
-        setOpponentAvailableActions(opponentAvailableActions);
-        setRole(role);
-        setHand(hand);
-        setDeck(deck);
-        setOpponentHand(opponentHand);
-        setAllCards(allCards);
-        setDiscarded(discarded);
-        setMyDiscarded(myDiscarded || []);
-        setIsGameStarted(true);
-        setSecretCard(secretCard);
-      }
-    );
+    // Only listen for game-start if we don't have initial data
+    if (!initialData) {
+      socket.on(
+        "game-start",
+        ({
+          availableActions,
+          opponentAvailableActions,
+          role,
+          hand,
+          opponentHand,
+          discarded,
+          myDiscarded,
+          deck,
+          secretCard,
+          config: { allCards },
+        }) => {
+          setAvailableActions(availableActions);
+          setOpponentAvailableActions(opponentAvailableActions);
+          setRole(role);
+          setHand(hand);
+          setDeck(deck);
+          setOpponentHand(opponentHand);
+          setAllCards(allCards);
+          setDiscarded(discarded);
+          setMyDiscarded(myDiscarded || []);
+          setIsGameStarted(true);
+          setSecretCard(secretCard);
+        }
+      );
+    }
 
     socket.on("disconnect", () => {
       console.log("Socket disconnected");
@@ -50,7 +61,7 @@ export default function useSocket() {
     return () => {
       socket.off("game-start");
     };
-  }, []);
+  }, [initialData]);
 
   // ... (draw-card, turn-start, oponent-hand-updated hooks remain unchanged)
 
@@ -91,59 +102,11 @@ export default function useSocket() {
     // ...
   }, []);
 
-
-  const [isGameStarted, setIsGameStarted] = useState(false);
+  // Additional state not from game-start
   const [isMyTurn, setIsMyTurn] = useState(false);
   const [opponentHoverIndex, setOpponentHoverIndex] = useState(null);
   const [actionResolver, setActionResolver] = useState({});
   const [overlayOption, setOverlayOption] = useState(0);
-  const [availableActions, setAvailableActions] = useState([]);
-  const [opponentAvailableActions, setOpponentAvailableActions] = useState([]);
-  const [scoredCards, setScoredCards] = useState([]);
-  const [opponentScoredCards, setOpponentScoredCards] = useState([]);
-  const [secretCard, setSecretCard] = useState(null);
-
-  useEffect(() => {
-    if (!socket.connected) {
-      socket.connect();
-    }
-
-    socket.on(
-      "game-start",
-      ({
-        availableActions,
-        opponentAvailableActions,
-        role,
-        hand,
-        opponentHand,
-        discarded,
-        myDiscarded,
-        deck,
-        secretCard,
-        config: { allCards },
-      }) => {
-        setAvailableActions(availableActions);
-        setOpponentAvailableActions(opponentAvailableActions);
-        setRole(role);
-        setHand(hand);
-        setDeck(deck);
-        setOpponentHand(opponentHand);
-        setAllCards(allCards);
-        setDiscarded(discarded);
-        setMyDiscarded(myDiscarded || []);
-        setIsGameStarted(true);
-        setSecretCard(secretCard);
-      }
-    );
-
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
-
-    return () => {
-      socket.off("game-start");
-    };
-  }, []);
 
   useEffect(() => {
     socket.on("drawn-card", ({ cardId, deck }) => {
