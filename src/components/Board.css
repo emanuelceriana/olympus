@@ -223,7 +223,8 @@
   max-height: 96%;
 
   border-radius: 12px;
-  border: 4px solid var(--border-gold);
+  /* Remove direct border that was being clipped */
+  border: none;
 
   /* Fix for missing borders in some rendering engines */
   box-sizing: border-box;
@@ -238,6 +239,23 @@
   /* Flex item behavior */
   flex: 0 1 auto;
   /* Allow shrinking */
+
+  /* Default border color variable */
+  --god-border: var(--border-gold);
+}
+
+/* Robust Border Overlay */
+.god::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 4px solid var(--god-border);
+  border-radius: 12px;
+  /* Match parent */
+  pointer-events: none;
+  /* Let clicks pass through */
+  z-index: 20;
+  /* Ensure it's on top of everything */
 }
 
 /* Internal Image */
@@ -304,37 +322,37 @@
 /* God Colors - Class Based */
 .god.pink {
   background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  border-color: #FF1493;
+  --god-border: #FF1493;
 }
 
 .god.lightblue {
   background: linear-gradient(135deg, #87CEEB, #4682B4);
-  border-color: #4169E1;
+  --god-border: #4169E1;
 }
 
 .god.green {
   background: linear-gradient(135deg, #22C55E, #15803D);
-  border-color: #4ADE80;
+  --god-border: #4ADE80;
 }
 
 .god.red {
   background: linear-gradient(135deg, #EF4444, #B91C1C);
-  border-color: #F87171;
+  --god-border: #F87171;
 }
 
 .god.gold {
   background: linear-gradient(135deg, #F59E0B, #D97706);
-  border-color: #FBBF24;
+  --god-border: #FBBF24;
 }
 
 .god.purple {
   background: linear-gradient(135deg, #8B5CF6, #5B21B6);
-  border-color: #A78BFA;
+  --god-border: #A78BFA;
 }
 
 .god.yellow {
   background: linear-gradient(135deg, #FBBF24, #F59E0B);
-  border-color: #E8B923;
+  --god-border: #E8B923;
 }
 
 /* Favor Indicators */
