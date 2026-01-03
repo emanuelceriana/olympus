@@ -320,3 +320,21 @@
         width: 100%;
     }
 }
+/* Footer Attribution */
+.lobby-footer {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1rem;
+  opacity: 0.6;
+}
+
+.lobby-footer p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.lobby-footer strong {
+  color: var(--color-gold);
+  font-weight: 600;
+}
