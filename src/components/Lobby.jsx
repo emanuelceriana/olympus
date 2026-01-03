@@ -98,23 +98,48 @@ export default function Lobby({ onGameStart }) {
 
         {error && <div className="error-toast">{error}</div>}
 
-        <div className="create-room-section">
-          <h3>Create New Room</h3>
-          <div className="create-form">
-            <input
-              type="text"
-              placeholder="Room name (optional)"
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-              maxLength={20}
-            />
-            <button 
-              className="btn-primary" 
-              onClick={handleCreateRoom}
-              disabled={isCreating}
-            >
-              {isCreating ? "Creating..." : "Create Room"}
-            </button>
+        <div className="lobby-actions">
+          <div className="action-card create-section">
+            <h3>Create New Room</h3>
+            <div className="input-group">
+              <input
+                type="text"
+                placeholder="Room Name (Optional)"
+                value={roomName}
+                onChange={(e) => setRoomName(e.target.value)}
+                maxLength={20}
+              />
+              <button 
+                className="btn-primary" 
+                onClick={handleCreateRoom}
+                disabled={isCreating}
+              >
+                {isCreating ? "..." : "Create"}
+              </button>
+            </div>
+          </div>
+
+          <div className="divider-vertical">OR</div>
+
+          <div className="action-card join-section">
+            <h3>Join by Code</h3>
+            <div className="input-group">
+              <input
+                type="text"
+                placeholder="Enter Room Code"
+                id="room-code-input"
+                maxLength={10}
+              />
+              <button 
+                className="btn-secondary btn-join-code"
+                onClick={() => {
+                  const val = document.getElementById('room-code-input').value;
+                  if(val) handleJoinRoom(val);
+                }}
+              >
+                Join
+              </button>
+            </div>
           </div>
         </div>
 

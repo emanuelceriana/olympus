@@ -45,26 +45,40 @@
 }
 
 /* ==================== CREATE ROOM ==================== */
-.create-room-section {
+/* ==================== ACTIONS (Create / Join) ==================== */
+.lobby-actions {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 1rem;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     padding: 1.5rem;
 }
 
-.create-room-section h3 {
-    margin: 0 0 1rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #E8B923;
-}
-
-.create-form {
+.action-card {
+    flex: 1;
     display: flex;
+    flex-direction: column;
     gap: 0.75rem;
 }
 
-.create-form input {
+.action-card h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #E8B923;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group input {
     flex: 1;
     padding: 0.75rem 1rem;
     border-radius: 8px;
@@ -73,16 +87,35 @@
     color: white;
     font-size: 0.9rem;
     transition: all 0.2s ease;
+    width: 100%;
+    /* Ensure full width in flex */
+    min-width: 0;
 }
 
-.create-form input::placeholder {
-    color: #666;
-}
-
-.create-form input:focus {
+.input-group input:focus {
     outline: none;
     border-color: #E8B923;
     box-shadow: 0 0 0 2px rgba(232, 185, 35, 0.2);
+}
+
+.divider-vertical {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0 0.5rem;
+}
+
+/* Specific buttons logic is reused from shared classes, but let's refine */
+.btn-join-code {
+    border-color: #22C55E;
+    color: #22C55E;
+}
+
+.btn-join-code:hover {
+    background: #22C55E;
+    color: white;
 }
 
 /* ==================== BUTTONS ==================== */
@@ -320,21 +353,31 @@
         width: 100%;
     }
 }
+
 /* Footer Attribution */
 .lobby-footer {
-  margin-top: 2rem;
-  text-align: center;
-  padding: 1rem;
-  opacity: 0.6;
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1rem;
+    opacity: 0.6;
 }
 
 .lobby-footer p {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin: 0;
 }
 
 .lobby-footer strong {
-  color: var(--color-gold);
-  font-weight: 600;
+    color: var(--color-gold);
+    font-weight: 600;
+}
+@media (max-width: 700px) {
+    .lobby-actions {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .divider-vertical {
+        display: none; 
+    }
 }

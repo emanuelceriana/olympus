@@ -193,9 +193,30 @@
   align-items: center;
   background: rgba(13, 20, 36, 0.8);
   /* Dark background */
-  border: 2px solid #555;
-  /* Default border */
+
+  /* Remove old border */
+  border: none;
+
+  /* Fix for render */
+  box-sizing: border-box;
+  transform: translateZ(0);
+
   overflow: hidden;
+
+  /* Default border color */
+  --card-border: #555;
+}
+
+/* Robust Border Overlay */
+.discarded-preview::after,
+.secret-card .content::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--card-border);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 20;
 }
 
 .god-object-icon {
@@ -203,6 +224,8 @@
   height: 70%;
   object-fit: contain;
   opacity: 0.8;
+  z-index: 1;
+  /* Ensure icon is below border but above background */
 }
 
 .card-value {
@@ -219,37 +242,37 @@
 /* ==================== GOD COLORS (Borders) ==================== */
 .discarded-preview.pink,
 .content.pink {
-  border-color: #FF69B4;
+  --card-border: #FF69B4;
 }
 
 .discarded-preview.lightblue,
 .content.lightblue {
-  border-color: #4FC3F7;
+  --card-border: #4FC3F7;
 }
 
 .discarded-preview.green,
 .content.green {
-  border-color: #66BB6A;
+  --card-border: #66BB6A;
 }
 
 .discarded-preview.red,
 .content.red {
-  border-color: #EF5350;
+  --card-border: #EF5350;
 }
 
 .discarded-preview.gold,
 .content.gold {
-  border-color: #FFD700;
+  --card-border: #FFD700;
 }
 
 .discarded-preview.purple,
 .content.purple {
-  border-color: #AB47BC;
+  --card-border: #AB47BC;
 }
 
 .discarded-preview.yellow,
 .content.yellow {
-  border-color: #FFEE58;
+  --card-border: #FFEE58;
 }
 
 /* Mobile Adjustments */
