@@ -260,31 +260,59 @@
     }
 }
 
-/* Card Colors for Actions */
+/* Card Colors for Actions - ROBUST FIX */
+.card, 
+.set-cards .card,
+.resolver-cards .card {
+    position: relative;
+    border: none !important; /* Remove old clipped border */
+    /* Ensure content stays inside */
+    background-clip: padding-box;
+    transform: translateZ(0);
+    overflow: hidden;
+    
+    /* Default variable */
+    --overlay-border: rgba(255, 255, 255, 0.2);
+}
+
+/* The overlay that guarantees visibility */
+.card::after,
+.set-cards .card::after,
+.resolver-cards .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--overlay-border); /* Slightly thicker for visibility */
+    border-radius: inherit; /* Inherit radius from parent card component */
+    pointer-events: none;
+    z-index: 50;
+    box-sizing: border-box;
+}
+
 .card.pink {
-    border-color: #FF1493;
+    --overlay-border: #FF1493;
 }
 
 .card.lightblue {
-    border-color: #4169E1;
+    --overlay-border: #4169E1;
 }
 
 .card.green {
-    border-color: #4ADE80;
+    --overlay-border: #4ADE80;
 }
 
 .card.red {
-    border-color: #F87171;
+    --overlay-border: #F87171;
 }
 
 .card.gold {
-    border-color: #FBBF24;
+    --overlay-border: #FBBF24;
 }
 
 .card.purple {
-    border-color: #A78BFA;
+    --overlay-border: #A78BFA;
 }
 
 .card.yellow {
-    border-color: #E8B923;
+    --overlay-border: #E8B923;
 }
