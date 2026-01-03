@@ -147,6 +147,10 @@ export default function Lobby({ onGameStart }) {
             )}
           </div>
         </div>
+        
+        <div className="lobby-footer">
+           <p>Based on the game <strong>Hanamikoji</strong> by Kota Nakayama</p>
+        </div>
       </div>
     </div>
   );
